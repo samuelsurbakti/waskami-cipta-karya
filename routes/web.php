@@ -20,3 +20,5 @@ Route::middleware(['auth'])->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/themes.php';
+require __DIR__.'/src.php';
