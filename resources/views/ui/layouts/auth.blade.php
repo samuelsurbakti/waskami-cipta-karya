@@ -26,7 +26,7 @@
             @if (!empty($image))
                 <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center p-5">
                     <div class="w-100 d-flex justify-content-center">
-                        <img src="{{ asset($image) }}" class="img-fluid" width="700">
+                        <img src="{{ asset($image) }}" class="img-fluid" style="height: 80vh">
                     </div>
                 </div>
             @endif
