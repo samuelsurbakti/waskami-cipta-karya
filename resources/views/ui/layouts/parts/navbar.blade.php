@@ -511,10 +511,13 @@
                             <div class="dropdown-divider my-1"></div>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="auth-login-cover.html" target="_blank">
+                            <a class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="#">
                                 <i class="icon-base bx bx-power-off icon-md me-3"></i>
-                                <span>Log Out</span>
+                                <span>Keluar</span>
                             </a>
+                            <form id="logout-form" method="POST" action="{{ route('logout') }}" class="w-full">
+                                @csrf
+                            </form>
                         </li>
                     </ul>
                 </li>

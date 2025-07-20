@@ -7,10 +7,10 @@ Route::domain('accel.waskami-cipta-karya.test')->group(function () {
     require __DIR__.'/auth.php';
 
     Route::get('/', function () {
-        return redirect(route('Waskami Control Center | Gate'));
+        return redirect(route('Accel | Gate'));
     });
 
     Route::group(['middleware' => ['auth']], function () {
-        Volt::route('gate', 'wcc.gate')->name('Waskami Control Center | Gate');
+        Volt::route('gate', 'accel.gate')->name('Accel | Gate');
     });
 });
