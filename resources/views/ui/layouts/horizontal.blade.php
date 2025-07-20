@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" class=" layout-navbar-fixed layout-menu-fixed layout-compact " dir="ltr" data-skin="default" data-assets-path="/themes/" data-template="horizontal-menu-template" data-bs-theme="light">
+	<head>
+		@include('ui.layouts.parts.head')
+        @livewireStyles
+	</head>
+	<body>
+		<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+			<div class="layout-container">
+				@include('ui.layouts.parts.navbar')
+
+                <div class="layout-page">
+					<div class="content-wrapper">
+						@include('ui.layouts.horizontal.menu')
+
+                        <div class="container-xxl flex-grow-1 container-p-y">
+							{{ $slot }}
+						</div>
+
+                        @include('ui.layouts.parts.footer')
+					</div>
+				</div>
+			</div>
+		</div>
+
+        @include('ui.layouts.parts.scripts')
+        @livewireScripts
+	</body>
+</html>
