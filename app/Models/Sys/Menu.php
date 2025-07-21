@@ -42,8 +42,16 @@ class Menu extends Model
         return $this->hasMany(Menu::class, 'parent')->orderBy('order_number');
     }
 
-    public function permissions()
+    public function action_permissions()
     {
-        return $this->hasMany(Permission::class, 'menu_id')->where('type', 'Permission')->orderBy('number', 'asc');
+        return $this->hasMany(Permission::class, 'menu_id')
+                    ->where('type', 'Permission') // Tindakan, misalnya create/update/delete
+                    ->orderBy('number', 'asc');
+    }
+
+    public function menu_permission()
+    {
+        return $this->hasOne(Permission::class, 'menu_id')
+                    ->where('type', 'Menu');
     }
 }

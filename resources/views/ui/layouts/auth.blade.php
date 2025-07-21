@@ -16,8 +16,11 @@
     <div class="authentication-wrapper authentication-cover">
 
         {{-- Brand --}}
-        <a href="{{ route('dashboard') }}" class="app-brand auth-cover-brand gap-2">
-            <ui.logo class="text-heading fw-bold" />
+        <a href="#" disabled class="app-brand auth-cover-brand gap-2">
+            <span class="app-brand-logo demo">
+                <img src="/src/assets/logo/logo.svg" alt="Logo" class="h-px-34">
+            </span>
+            <span class="app-brand-text demo text-heading fw-bold">Accel</span>
         </a>
 
         {{-- Main auth layout --}}
@@ -38,7 +41,6 @@
         </div>
     </div>
 
-    @include('ui.partials.default-js')
-    @stack('page_scripts')
+    @include('ui.layouts.parts.scripts')
 </body>
 </html>

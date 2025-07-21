@@ -39,7 +39,7 @@ new #[Layout('ui.layouts.auth', [ 'image' => '/themes/img/illustrations/login.sv
 
         RateLimiter::clear($this->throttleKey());
 
-        $this->redirectIntended(default: route('Accel | Gate'), navigate: true);
+        $this->redirectIntended(default: route('Accel | Gate'));
     }
 
     /**

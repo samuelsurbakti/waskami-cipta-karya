@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             'username' => 'sammy',
             'email' => 'sammysurbakti@gmail.com',
             'password' => bcrypt('sammy'),
-            'avatar' => 'null.png',
+            'avatar' => $avatar.'.png',
             'account_status' => '1',
         ]);
 

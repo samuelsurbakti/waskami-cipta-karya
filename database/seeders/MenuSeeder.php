@@ -41,7 +41,7 @@ class MenuSeeder extends Seeder
                 Menu::create([
                     'app_id' => $app->id,
                     'title' => 'Sistem',
-                    'icon' => 'bx bx-cogs',
+                    'icon' => 'bx bx-cog',
                     'url' => 'system',
                     'order_number' => $menu_no++,
                     'parent' => null,
