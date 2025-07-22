@@ -17,5 +17,10 @@ class RoleSeeder extends Seeder
             'name' => 'Developer',
             'guard_name' => 'web',
         ]);
+
+        Role::create([
+            'name' => 'Direksi',
+            'guard_name' => 'web',
+        ]);
     }
 }

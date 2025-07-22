@@ -1,8 +1,8 @@
 @props([
-    'name' => $attributes->get('name') ?? $attributes->get('wire:model'),
+    'name' => $attributes->get('name') ?? $attributes->get('wire:model') ?? $attributes->get('wire:model.live'),
     'label' => null,
     'type' => 'text',
-    'id' => $attributes->get('id') ?? $attributes->get('wire:model') ?? $attributes->get('name'),
+    'id' => $attributes->get('id') ?? $attributes->get('wire:model') ?? $attributes->get('name') ?? $attributes->get('wire:model.live'),
     'placeholder' => '',
     'container_class' => $attributes->get('container_class'),
 ])

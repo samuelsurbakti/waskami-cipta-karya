@@ -11,8 +11,12 @@ Route::domain('accel.waskami-cipta-karya.test')->group(function () {
     });
 
     Route::group(['middleware' => ['auth']], function () {
-        Volt::route('gate', 'accel.gate')->name('Accel | Gate');
+        Volt::route('gate', 'accel.gate.index')->name('Accel | Gate');
 
-        Volt::route('account', 'accel.account')->name('Accel | Account');
+        Volt::route('account', 'accel.account.index')->name('Accel | Account');
+
+        Volt::route('system', 'accel.system.index')->name('Accel | System');
+
+        Volt::route('authorization', 'accel.authorization.index')->name('Accel | Authorization');
     });
 });

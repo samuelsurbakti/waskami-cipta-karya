@@ -8,5 +8,5 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 }; ?>
 
 <div>
-    Accel Account
+    //
 </div>

@@ -7,6 +7,6 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
     //
 }; ?>
 
-<div class="row">
-    Accel
+<div>
+    //
 </div>
