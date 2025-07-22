@@ -12,9 +12,7 @@
 					<div class="content-wrapper">
 						@include('ui.layouts.horizontal.menu')
 
-                        <div class="container-xxl flex-grow-1 container-p-y">
-							{{ $slot }}
-						</div>
+                        {{ $slot }}
 
                         @include('ui.layouts.parts.footer')
 					</div>
