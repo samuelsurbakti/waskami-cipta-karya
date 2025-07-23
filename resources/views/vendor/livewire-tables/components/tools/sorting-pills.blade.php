@@ -125,7 +125,7 @@
 @elseif ($isBootstrap5)
     <div>
         @if ($this->sortingPillsAreEnabled() && $this->hasSorts())
-            <div class="mb-3 d-flex gap-2" x-cloak x-show="!currentlyReorderingStatus">
+            <div class="mb-3 d-flex gap-2 px-6" x-cloak x-show="!currentlyReorderingStatus">
                 <small class="align-self-center">{{ __($localisationPath.'Applied Sorting') }}:</small>
 
                 @foreach($this->getSorts() as $columnSelectName => $direction)

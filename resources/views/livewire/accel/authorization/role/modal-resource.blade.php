@@ -36,12 +36,15 @@ new class extends Component {
                 'name' => $this->role_name,
                 'guard_name' => 'web',
             ]);
+
+            $this->dispatch("re_render_roles_container");
         } else {
             $role = Role::where('uuid', $this->role_id)->firstOrFail();
             $role->update(['name' => $this->role_name]);
+
+            $this->dispatch("refresh_role_component{$role->uuid}");
         }
 
-        $this->dispatch("refresh_role_component{$role->uuid}");
         $this->dispatch('close_modal_role_resource');
 
         LivewireAlert::title('')

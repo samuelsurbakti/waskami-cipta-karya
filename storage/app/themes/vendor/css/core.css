@@ -14887,7 +14887,9 @@ li:not(:first-child) .dropdown-item,
     border-radius: 50%
 }
 
-.pagination.pagination-rounded .page-item a {
+.pagination.pagination-rounded .page-item a,
+.pagination.pagination-rounded .page-item button,
+.pagination.pagination-rounded .page-item span {
     border-radius: .375rem
 }
 

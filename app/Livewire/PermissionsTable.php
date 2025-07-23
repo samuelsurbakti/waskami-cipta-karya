@@ -10,9 +10,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Actions\Action;
+use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ArrayColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Columns\ButtonGroupColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectDropdownFilter;
 
@@ -30,7 +32,7 @@ class PermissionsTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('uuid');
+        $this->setPrimaryKey('uuid')->setAdditionalSelects(['slp_permissions.uuid as identifier']);
         $this->setLoadingPlaceholderEnabled();
         $this->setLoadingPlaceholderContent('Mengambil Data');
         $this->setComponentWrapperAttributes([
@@ -43,7 +45,7 @@ class PermissionsTable extends DataTableComponent
         ]);
         $this->setSearchDisabled();
         $this->setFilterLayoutSlideDown();
-        $this->setActionsLeft();
+        $this->setActionsInToolbarEnabled();
     }
 
     public function columns(): array
@@ -59,28 +61,36 @@ class PermissionsTable extends DataTableComponent
                     return TableHelper::roles_in_permission($row);
                 })
                 ->html(),
+            Column::make('')
+                ->label(fn ($row, Column $column) => TableHelper::action_buttons(recordId: $row->uuid,
+                        permissions: [
+                            'edit' => 'Accel | Portal',
+                            'delete' => 'Accel | Sistem',
+                        ],
+                        cssClasses: [
+                            'edit_btn' => 'btn_permission_edit',
+                            'delete_btn' => 'btn_permission_delete',
+                        ],
+                        editModalTarget: '#modal_permission_resource'))
+                ->html(),
         ];
     }
 
     public function filters(): array
     {
-        $types = Permission::query()
-            ->select('type')
-            ->distinct()
-            ->orderBy('type')
-            ->pluck('type', 'type') // Ini akan menghasilkan array ['nilai' => 'nilai']
-            ->toArray();
-
-        // Tambahkan opsi 'All' di bagian awal array
-        $filterOptions = ['' => 'Semua Jenis'] + $types;
-
         return [
-            SelectFilter::make('Jenis')
-                ->options($filterOptions) // Menggunakan opsi dinamis dari database
-                ->filter(function(Builder $builder, string $value) {
-                    // Logika filter Anda. Pastikan $value sesuai dengan data di DB.
+            MultiSelectFilter::make('Jenis')
+                ->options(
+                    Permission::query()
+                        ->distinct()
+                        ->get()
+                        ->keyBy('type')
+                        ->map(fn($permission) => $permission->type)
+                        ->toArray()
+                ) // Menggunakan opsi dinamis dari database
+                ->filter(function(Builder $builder, array $value) {
                     if (!empty($value)) {
-                        $builder->where('type', $value);
+                        $builder->whereIn('type', $value);
                     }
                 }),
             MultiSelectFilter::make('Aplikasi')
@@ -102,21 +112,39 @@ class PermissionsTable extends DataTableComponent
                     'placeholder' => 'Cari Menu',
                     'maxlength' => '25',
                 ])
-                ->setWireBlur()
+                ->setWireLive()
                 ->filter(function(Builder $builder, string $value) {
                     if (!empty($value)) {
-                        $builder->where('menu.name', 'LIKE', '%'.$value.'%');
+                        $builder->where('menu.title', 'LIKE', '%'.$value.'%');
                     }
                 }),
-
+            TextFilter::make('Nama')
+                ->config([
+                    'placeholder' => 'Cari Nama',
+                    'maxlength' => '25',
+                ])
+                ->setWireLive()
+                ->filter(function(Builder $builder, string $value) {
+                    if (!empty($value)) {
+                        $builder->where('slp_permissions.name', 'LIKE', '%'.$value.'%');
+                    }
+                }),
         ];
     }
 
     public function actions(): array
     {
         return [
-            Action::make('View Dashboard')
-            ->setRoute('Accel | Gate'),
+            Action::make('Tambah Data')
+            ->setWireAction("wire:click")
+            ->setWireActionDispatchParams("'reset_btn'")
+            ->setActionAttributes([
+                'class' => 'btn btn-sm btn-label-primary',
+                'data-bs-toggle '=> 'modal',
+                'data-bs-target' => '#modal_permission_resource',
+                'default-colors' => false,
+                'default-styling' => false
+            ]),
         ];
 
     }

@@ -36,7 +36,7 @@ new class extends Component {
 <div class="col-xl-3 col-lg-6 col-md-6">
     <div class="card">
         <div class="card-body">
-            <div class="d-flex justify-content-between mb-2">
+            <div class="d-flex justify-content-between">
                 <h6 class="fw-normal">Total {{ $roleUsersCount }} akun</h6>
                 @if($roleUsersCount != 0)
                 <ul class="list-unstyled d-flex align-items-center avatar-group mb-0">
