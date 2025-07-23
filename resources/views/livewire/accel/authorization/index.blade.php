@@ -82,3 +82,14 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
     <livewire:accel.authorization.permission.modal-resource />
 </div>
 
+@script
+    <script>
+        $(document).ready(function () {
+            $(document).on('click', '.btn_permission_edit', function () {
+                $wire.dispatch('set_permission', { permission_id: $(this).attr('value') });
+            });
+
+
+        });
+    </script>
+@endscript

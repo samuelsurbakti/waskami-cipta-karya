@@ -61,7 +61,9 @@ class PermissionsTable extends DataTableComponent
                     return TableHelper::roles_in_permission($row);
                 })
                 ->html(),
-            Column::make('')
+            Column::make('Aksi')
+                ->setColumnLabelStatusDisabled()
+                ->excludeFromColumnSelect()
                 ->label(fn ($row, Column $column) => TableHelper::action_buttons(recordId: $row->uuid,
                         permissions: [
                             'edit' => 'Accel | Portal',

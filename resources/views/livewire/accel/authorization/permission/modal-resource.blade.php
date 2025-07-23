@@ -6,6 +6,7 @@ use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use App\Models\SLP\Permission;
 use Livewire\Attributes\Validate;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 new class extends Component {
     public $types = [], $apps = [], $menus = [];
@@ -90,19 +91,53 @@ new class extends Component {
         $this->dispatch('close_modal_permission_resource');
 
         LivewireAlert::title('')
-            ->text('Berhasil ' . (is_null($this->role_id) ? 'menambah' : 'mengubah') . ' Izin')
+            ->text('Berhasil ' . (is_null($this->permission_id) ? 'menambah' : 'mengubah') . ' Izin')
             ->success()
             ->toast()
             ->position('bottom-end')
             ->show();
 
-        $this->reset();
+        $this->reset_permission();
+    }
+
+    #[On('ask_to_delete_permission')]
+    public function ask_to_delete_permission($permission_id)
+    {
+        $this->permission_id = $permission_id;
+        $permission = Permission::find($this->permission_id);
+        LivewireAlert::title('Peringatan')
+            ->text('Perintah ini akan menghapus Izin '.$permission->name.', Anda yakin ingin melanjutkan?')
+            ->asConfirm()
+            ->withConfirmButton('Lanjutkan')
+            ->withDenyButton('Batalkan')
+            ->onConfirm('delete_permission')
+            ->show();
+    }
+
+    public function delete_permission()
+    {
+        $permission = Permission::find($this->permission_id);
+
+        if($permission) {
+            $permission->delete();
+
+            $this->dispatch('refreshDatatable');
+
+            LivewireAlert::title('')
+            ->text('Berhasil menghapus Izin')
+            ->success()
+            ->toast()
+            ->position('bottom-end')
+            ->show();
+
+            $this->reset_permission();
+        }
     }
 
     public function mount()
     {
         $this->apps = App::orderBy('order_number')->get();
-        $this->types = ['App', 'Menu', 'Izin'];
+        $this->types = ['App', 'Menu', 'Permission'];
     }
 }; ?>
 
@@ -167,17 +202,21 @@ new class extends Component {
                         @enderror
                     </div>
 
-                    <div class="col-12 mb-4">
-                        <label class="form-label" for="permission_number">Urutan</label>
-                        <input type="text" class="form-control @error('permission_number') is-invalid @enderror" wire:model="permission_number" placeholder="Urutan" />
-                        @error('permission_number')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    <x-ui::forms.input
+                        wire:model.live="permission_number"
+                        type="text"
+                        label="Urutan"
+                        placeholder="Urutan"
+                        container_class="col-12 mb-6"
+                    />
 
                     <div class="col-12 text-center mt-8">
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1">Simpan</button>
-                        <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Batalkan</button>
+                        <x-ui::elements.button type="submit" class="btn-primary me-sm-3 me-1">
+                            Simpan
+                        </x-ui::elements.button>
+                        <x-ui::elements.button type="reset" class="btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                            Batalkan
+                        </x-ui::elements.button>
                     </div>
                 </form>
             </div>
@@ -210,6 +249,10 @@ new class extends Component {
 
             $(document).on('change', '.select2', function () {
                 $wire.dispatch('set_permission_field', { field: $(this).attr('id'), value: $(this).val() });
+            });
+
+            $(document).on('click', '.btn_permission_delete', function () {
+                $wire.dispatch('ask_to_delete_permission', { permission_id: $(this).attr('value') });
             });
 
             window.Livewire.on('permission_field_updated', () => {
