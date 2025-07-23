@@ -53,7 +53,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
                         </div>
                     </div>
                     <div class="col-sm-8">
-                        <div class="card-body text-sm-end text-center ps-sm-0">
+                        <div class="card-body text-sm-end text-center ps-sm-0 p-4">
                             <p class="mb-0">Butuh peran tambahan? Klik tombol dibawah ini untuk menambah peran.</p>
                             <x-ui::elements.button
                                 wire:click="$dispatch('reset_role')"

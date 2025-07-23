@@ -185,7 +185,7 @@ new class extends Component {
                         <select wire:model="permission_menu_id" id="permission_menu_id" class="form-select select2 @error('permission_menu_id') is-invalid @enderror" style="width: 100%;" data-placeholder="Menu">
                                 <option></option>
                                 @forelse($menus as $menu)
-                                    <option value="{{ $menu->id }}">{{ $menu->title }}</option>
+                                    <option value="{{ $menu->id }}">[{{ $menu->app->name }}]{{ $menu->title }}</option>
                                 @empty
                                 @endforelse
                             </select>
@@ -194,13 +194,13 @@ new class extends Component {
                         @enderror
                     </div>
 
-                    <div class="col-12 mb-4">
-                        <label class="form-label" for="permission_name">Izin</label>
-                        <input type="text" class="form-control @error('permission_name') is-invalid @enderror" wire:model="permission_name" placeholder="Izin" />
-                        @error('permission_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    <x-ui::forms.input
+                        wire:model.live="permission_name"
+                        type="text"
+                        label="Izin"
+                        placeholder="Izin"
+                        container_class="col-12 mb-6"
+                    />
 
                     <x-ui::forms.input
                         wire:model.live="permission_number"
