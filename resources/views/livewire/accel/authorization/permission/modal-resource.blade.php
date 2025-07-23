@@ -58,12 +58,22 @@ new class extends Component {
             $this->menus = Menu::where('app_id', $this->permission_app_id)->orderBy('order_number')->get();
         }
 
-        $this->dispatch('permission_field_updated');
+        try {
+            $this->validate();
+        } catch (Throwable $e) {
+            $this->dispatch('re_init_select2');
+            throw $e;
+        }
     }
 
     public function save()
     {
-        $this->validate();
+        try {
+            $this->validate();
+        } catch (Throwable $e) {
+            $this->dispatch('re_init_select2');
+            throw $e;
+        }
 
         if(is_null($this->permission_id)) {
             $menu = Permission::create([
@@ -152,47 +162,40 @@ new class extends Component {
                 </div>
                 <form wire:submit="save" method="POST">
                     @csrf
-                    <div class="col-12 mb-4">
-                        <label class="form-label" for="permission_type">Jenis</label>
-                        <select wire:model="permission_type" id="permission_type" class="form-select select2 @error('permission_type') is-invalid @enderror" style="width: 100%;" data-placeholder="Jenis">
-                                <option></option>
-                                @forelse($types as $type)
-                                    <option value="{{ $type }}">{{ $type }}</option>
-                                @empty
-                                @endforelse
-                            </select>
-                        @error('permission_type')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    <x-ui::forms.select
+                        wire-model="permission_type"
+                        label="Jenis"
+                        placeholder="Pilih Jenis"
+                        container-class="col-12 mb-6"
+                        init-select2-class="select2_permission"
+                    >
+                        @forelse($types as $type)
+                            <option value="{{ $type }}">{{ $type }}</option>
+                        @empty
+                        @endforelse
+                    </x-ui::forms.select>
 
-                    <div class="col-12 mb-4">
-                        <label class="form-label" for="permission_app_id">Aplikasi</label>
-                        <select wire:model="permission_app_id" id="permission_app_id" class="form-select select2 @error('permission_app_id') is-invalid @enderror" style="width: 100%;" data-placeholder="Aplikasi">
-                                <option></option>
-                                @forelse($apps as $app)
-                                    <option value="{{ $app->id }}">{{ $app->name }}</option>
-                                @empty
-                                @endforelse
-                            </select>
-                        @error('permission_app_id')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    <x-ui::forms.select
+                        wire-model="permission_app_id"
+                        label="Aplikasi"
+                        placeholder="Pilih Aplikasi"
+                        container-class="col-12 mb-6"
+                        init-select2-class="select2_permission"
+                        :options="$apps"
+                        value-field="id"
+                        text-field="name"
+                    />
 
-                    <div class="col-12 mb-4">
-                        <label class="form-label" for="permission_menu_id">Menu</label>
-                        <select wire:model="permission_menu_id" id="permission_menu_id" class="form-select select2 @error('permission_menu_id') is-invalid @enderror" style="width: 100%;" data-placeholder="Menu">
-                                <option></option>
-                                @forelse($menus as $menu)
-                                    <option value="{{ $menu->id }}">[{{ $menu->app->name }}]{{ $menu->title }}</option>
-                                @empty
-                                @endforelse
-                            </select>
-                        @error('permission_menu_id')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    <x-ui::forms.select
+                        wire-model="permission_menu_id"
+                        label="Menu"
+                        placeholder="Pilih Menu"
+                        container-class="col-12 mb-6"
+                        init-select2-class="select2_permission"
+                        :options="$menus"
+                        value-field="id"
+                        text-field="title"
+                    />
 
                     <x-ui::forms.input
                         wire:model.live="permission_name"
@@ -233,7 +236,7 @@ new class extends Component {
         });
 
         function initSelect2() {
-            var e_select2 = $(".select2");
+            var e_select2 = $(".select2_permission");
             e_select2.length && e_select2.each(function () {
                 var e_select2 = $(this);
                 e_select2.wrap('<div class="position-relative"></div>').select2({
@@ -247,7 +250,7 @@ new class extends Component {
         $(document).ready(function () {
             initSelect2();
 
-            $(document).on('change', '.select2', function () {
+            $(document).on('change', '.select2_permission', function () {
                 $wire.dispatch('set_permission_field', { field: $(this).attr('id'), value: $(this).val() });
             });
 
@@ -255,7 +258,7 @@ new class extends Component {
                 $wire.dispatch('ask_to_delete_permission', { permission_id: $(this).attr('value') });
             });
 
-            window.Livewire.on('permission_field_updated', () => {
+            window.Livewire.on('re_init_select2', () => {
                 setTimeout(initSelect2, 0)
             })
         });
