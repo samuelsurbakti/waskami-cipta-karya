@@ -26,6 +26,10 @@
         ]) }}
     >
 
+    @if ($slot->isNotEmpty())
+        {{ $slot }}
+    @endif
+
     @if ($hasError)
         <div class="invalid-feedback">
             {{ $errors->first($name) }}

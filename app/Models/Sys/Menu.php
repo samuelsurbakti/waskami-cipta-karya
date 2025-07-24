@@ -15,7 +15,7 @@ class Menu extends Model
     use HasUuids, LogsActivity, SoftDeletes;
 
     protected $table = 'sys_menus';
-    protected $fillable = ['app_id', 'title', 'icon', 'url', 'source', 'order_number', 'parent', 'member_of'];
+    protected $fillable = ['app_id', 'title', 'icon', 'url', 'order_number', 'parent', 'member_of'];
 
     public function getActivitylogOptions(): LogOptions
     {

@@ -58,12 +58,7 @@ new class extends Component {
             $this->menus = Menu::where('app_id', $this->permission_app_id)->orderBy('order_number')->get();
         }
 
-        try {
-            $this->validate();
-        } catch (Throwable $e) {
-            $this->dispatch('re_init_select2');
-            throw $e;
-        }
+        $this->dispatch('re_init_select2');
     }
 
     public function save()

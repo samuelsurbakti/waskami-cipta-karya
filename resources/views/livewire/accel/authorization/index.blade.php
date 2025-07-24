@@ -74,11 +74,10 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
     <div class="row mb-4">
         <h4 class="fw-bold py-3 mb-0">Daftar Izin</h4>
 
-        <livewire:permissions-table />
+        <livewire:accel.authorization.permissions-table />
     </div>
 
-    @livewire('accel.authorization.role.modal-resource')
-
+    <livewire:accel.authorization.role.modal-resource />
     <livewire:accel.authorization.permission.modal-resource />
     <livewire:accel.authorization.provide.modal-resource />
 </div>
