@@ -58,11 +58,11 @@ new class extends Component {
                 </div>
                 <div class="d-flex justify-content-between">
                     <x-ui::elements.button
-                        wire:click="$dispatch('set_role', { role_id: '{{ $role->uuid }}' })"
+                        wire:click="$dispatch('set_role_for_provide', { role_id: '{{ $role->uuid }}' })"
                         class="bg-primary-subtle text-primary btn_authorization"
                         title="{{ $role->name }}"
                         data-bs-toggle="modal"
-                        data-bs-target="#modal_authorization"
+                        data-bs-target="#modal_provide_permission"
                     >
                         <small>Kelola Izin</small>
                     </x-ui::elements.button>

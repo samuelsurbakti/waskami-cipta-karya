@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class=" layout-navbar-fixed layout-menu-fixed layout-compact " dir="ltr" data-skin="default" data-assets-path="/themes/" data-template="horizontal-menu-template" data-bs-theme="light">
+<html lang="en" class=" layout-navbar-fixed layout-menu-fixed layout-compact customizer-hide" dir="ltr" data-skin="default" data-assets-path="/themes/" data-template="horizontal-menu-template" data-bs-theme="light">
 	<head>
 		@include('ui.layouts.parts.head')
 	</head>

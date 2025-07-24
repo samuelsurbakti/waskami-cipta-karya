@@ -80,6 +80,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
     @livewire('accel.authorization.role.modal-resource')
 
     <livewire:accel.authorization.permission.modal-resource />
+    <livewire:accel.authorization.provide.modal-resource />
 </div>
 
 @script

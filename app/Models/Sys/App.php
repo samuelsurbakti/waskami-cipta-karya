@@ -3,6 +3,7 @@
 namespace App\Models\Sys;
 
 use App\Models\Sys\Menu;
+use App\Models\SLP\Permission;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -29,5 +30,10 @@ class App extends Model
     public function menus()
     {
         return $this->hasMany(Menu::class, 'app_id')->orderBy('order_number');
+    }
+
+    public function app_permission()
+    {
+        return $this->hasOne(Permission::class, 'app_id', 'id')->where('type', 'App');
     }
 }
