@@ -28,7 +28,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row mb-4">
-        @can('Accel | Sistem | Menu | Melihat Daftar Data ')
+        @can('Accel | Sistem | Menu | Melihat Daftar Data')
             <h4 class="fw-bold py-3 mb-0">Daftar Menu</h4>
 
             <livewire:accel.system.menus-table />

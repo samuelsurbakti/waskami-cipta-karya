@@ -9,28 +9,29 @@ use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 new class extends Component {
     public $apps = [], $menus = [];
+
     public ?string $menu_id = null;
 
-    #[Validate('required|string', as: 'Aplikasi', onUpdate: false)]
-    public string $menu_app_id = '';
+    #[Validate('required|string', as: 'Aplikasi')]
+    public ?string $menu_app_id = null;
 
-    #[Validate('required|string', as: 'Judul', onUpdate: false)]
-    public string $menu_title = '';
+    #[Validate('required|string', as: 'Judul')]
+    public ?string $menu_title = null;
 
-    #[Validate('required|string', as: 'Ikon', onUpdate: false)]
-    public string $menu_icon = '';
+    #[Validate('required|string', as: 'Ikon')]
+    public ?string $menu_icon = null;
 
-    #[Validate('required|string', as: 'Url', onUpdate: false)]
-    public string $menu_url = '';
+    #[Validate('required|string', as: 'Url')]
+    public ?string $menu_url = null;
 
-    #[Validate('required|string', as: 'Urutan', onUpdate: false)]
+    #[Validate('required|string', as: 'Urutan')]
     public ?string $menu_order_number = null;
 
-    #[Validate('nullable', as: 'Turunan dari', onUpdate: false)]
-    public string $menu_parent = '';
+    #[Validate('nullable', as: 'Turunan dari')]
+    public ?string $menu_parent = null;
 
-    #[Validate('nullable', as: 'Anggota dari', onUpdate: false)]
-    public string $menu_member_of = '';
+    #[Validate('nullable', as: 'Anggota dari')]
+    public ?string $menu_member_of = null;
 
     #[On('reset_menu')]
     public function reset_menu()
@@ -38,11 +39,16 @@ new class extends Component {
         $this->reset(['menu_id', 'menu_app_id', 'menu_title', 'menu_icon', 'menu_url', 'menu_order_number', 'menu_parent', 'menu_member_of', 'menus']);
     }
 
+    public function hydrate()
+    {
+        $this->dispatch('re_init_select2');
+    }
+
     #[On('set_menu')]
     public function set_menu($menu_id)
     {
         $this->menu_id = $menu_id;
-        $menu = Menu::where('id', $this->menu_id)->first();
+        $menu = Menu::findOrFail($this->menu_id);
 
         $this->set_menu_field('menu_app_id', $menu->app_id);
         $this->menu_title = $menu->title;
@@ -98,7 +104,7 @@ new class extends Component {
             ]);
         }
 
-        $this->emit('close_modal_menu_resource');
+        $this->dispatch('close_modal_menu_resource');
 
         LivewireAlert::title('')
             ->text('Berhasil '.(is_null($this->menu_id) ? 'menambah' : 'mengubah').' Menu')
@@ -122,7 +128,15 @@ new class extends Component {
             <div class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div wire:loading wire:target="set_menu" class="row h-px-100 justify-content-center align-items-center mb-6">
+                <div class="sk-swing w-px-75 h-px-75">
+                    <div class="sk-swing-dot"></div>
+                    <div class="sk-swing-dot"></div>
+                </div>
+                <h5 class="text-center">Mengambil Data</h5>
+            </div>
+
+            <div class="modal-body" wire:loading.remove wire:target="set_menu">
                 <div class="text-center mb-4">
                     <h3>{{ (is_null($menu_id) ? 'Tambah' : 'Edit') }} Menu</h3>
                     <p>Di sini, Anda dapat {{ (is_null($menu_id) ? 'menambah data' : 'mengubah informasi') }} Menu.</p>
@@ -234,6 +248,10 @@ new class extends Component {
 
             $(document).on('change', '.select2_menu', function () {
                 $wire.dispatch('set_menu_field', { field: $(this).attr('id'), value: $(this).val() });
+            });
+
+            $(document).on('click', '.btn_menu_edit', function () {
+                $wire.set_menu($(this).attr('value'));
             });
 
             $(document).on('click', '.btn_menu_delete', function () {

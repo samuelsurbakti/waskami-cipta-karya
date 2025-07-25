@@ -5,7 +5,6 @@ namespace App\Livewire\Accel\System;
 use App\Models\Sys\App;
 use App\Models\Sys\Menu;
 use App\Helpers\TableHelper;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -28,7 +27,7 @@ class MenusTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('id')->setAdditionalSelects(['sys_menus.id as identifier']);
         $this->setLoadingPlaceholderEnabled();
         $this->setLoadingPlaceholderContent('Mengambil Data');
         $this->setComponentWrapperAttributes([
@@ -58,10 +57,10 @@ class MenusTable extends DataTableComponent
             Column::make("Urutan", "order_number"),
             Column::make("Turunan Dari", "parent"),
             Column::make("Kelompok", "member_of"),
-            Column::make('Aksi', 'id')
+            Column::make('Aksi')
                 ->setColumnLabelStatusDisabled()
                 ->excludeFromColumnSelect()
-                ->label(fn ($value, Column $column) => TableHelper::action_buttons(recordId: $value,
+                ->label(fn ($row, Column $column) => TableHelper::action_buttons(recordId: $row->identifier,
                         permissions: [
                             'edit' => 'Accel | Portal',
                             'delete' => 'Accel | Sistem',
@@ -133,7 +132,7 @@ class MenusTable extends DataTableComponent
         return [
             Action::make('Tambah Data')
             ->setWireAction("wire:click")
-            ->setWireActionDispatchParams("'reset_btn'")
+            ->setWireActionDispatchParams("'reset_menu'")
             ->setActionAttributes([
                 'class' => 'btn btn-sm btn-label-primary',
                 'data-bs-toggle '=> 'modal',

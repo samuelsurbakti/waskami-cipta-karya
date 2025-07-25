@@ -6,7 +6,6 @@ use App\Models\Sys\App;
 use App\Helpers\TableHelper;
 use App\Models\SLP\Permission;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Route;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Actions\Action;
