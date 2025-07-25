@@ -123,7 +123,7 @@ new class extends Component {
 }; ?>
 
 <div wire:ignore.self class="modal fade" id="modal_menu_resource" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-simple">
         <div class="modal-content">
             <div class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -138,7 +138,7 @@ new class extends Component {
 
             <div class="modal-body" wire:loading.remove wire:target="set_menu">
                 <div class="text-center mb-4">
-                    <h3>{{ (is_null($menu_id) ? 'Tambah' : 'Edit') }} Menu</h3>
+                    <h4 class="mb-2">{{ (is_null($menu_id) ? 'Tambah' : 'Edit') }} Menu</h4>
                     <p>Di sini, Anda dapat {{ (is_null($menu_id) ? 'menambah data' : 'mengubah informasi') }} Menu.</p>
                 </div>
                 <form wire:submit="save" class="row" method="POST">
@@ -247,7 +247,7 @@ new class extends Component {
             initSelect2();
 
             $(document).on('change', '.select2_menu', function () {
-                $wire.dispatch('set_menu_field', { field: $(this).attr('id'), value: $(this).val() });
+                $wire.set_menu_field($(this).attr('id'), $(this).val())
             });
 
             $(document).on('click', '.btn_menu_edit', function () {
@@ -255,7 +255,7 @@ new class extends Component {
             });
 
             $(document).on('click', '.btn_menu_delete', function () {
-                $wire.dispatch('ask_to_delete_menu', { menu_id: $(this).attr('value') });
+                $wire.ask_to_delete_menu($(this).attr('value'))
             });
 
             window.Livewire.on('re_init_select2', () => {

@@ -135,9 +135,8 @@ class PermissionsTable extends DataTableComponent
     {
         return [
             Action::make('Tambah Data')
-            ->setWireAction("wire:click")
-            ->setWireActionDispatchParams("'reset_btn'")
             ->setActionAttributes([
+                'id' => 'btn_permission_add',
                 'class' => 'btn btn-sm btn-label-primary',
                 'data-bs-toggle '=> 'modal',
                 'data-bs-target' => '#modal_permission_resource',

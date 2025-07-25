@@ -14,16 +14,16 @@ new class extends Component {
     public ?string $permission_id = null;
 
     #[Validate('required|string', as: 'Jenis')]
-    public string $permission_type = '';
+    public ?string $permission_type = null;
 
     #[Validate('required|string', as: 'Aplikasi')]
-    public string $permission_app_id = '';
+    public ?string $permission_app_id = null;
 
     #[Validate('required|string', as: 'Menu')]
-    public string $permission_menu_id = '';
+    public ?string $permission_menu_id = null;
 
     #[Validate('required|string', as: 'Izin')]
-    public string $permission_name = '';
+    public ?string $permission_name = null;
 
     #[Validate('required|numeric', as: 'Urutan')]
     public ?string $permission_number = null;
@@ -35,9 +35,9 @@ new class extends Component {
         $this->permission_id = $permission_id;
         $permission = Permission::where('uuid', $this->permission_id)->first();
 
-        $this->set_permission_field('permission_type', $permission->type);
-        $this->set_permission_field('permission_app_id', $permission->app_id);
-        $this->set_permission_field('permission_menu_id', $permission->menu_id);
+        $this->permission_type = $permission->type;
+        $this->permission_app_id = $permission->app_id;
+        $this->permission_menu_id = $permission->menu_id;
 
         $this->permission_name = $permission->name;
         $this->permission_number = $permission->number;
@@ -47,6 +47,12 @@ new class extends Component {
     public function reset_permission()
     {
         $this->reset(['permission_id', 'permission_type', 'permission_app_id', 'permission_menu_id', 'permission_name', 'permission_number']);
+        $this->resetValidation();
+    }
+
+    public function hydrate()
+    {
+        $this->dispatch('re_init_select2');
     }
 
     #[On('set_permission_field')]
@@ -57,18 +63,11 @@ new class extends Component {
         if($field == 'permission_app_id') {
             $this->menus = Menu::where('app_id', $this->permission_app_id)->orderBy('order_number')->get();
         }
-
-        $this->dispatch('re_init_select2');
     }
 
     public function save()
     {
-        try {
-            $this->validate();
-        } catch (Throwable $e) {
-            $this->dispatch('re_init_select2');
-            throw $e;
-        }
+        $this->validate();
 
         if(is_null($this->permission_id)) {
             $menu = Permission::create([
@@ -149,7 +148,15 @@ new class extends Component {
 <div wire:ignore.self class="modal fade" id="modal_permission_resource" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-simple">
         <div class="modal-content">
-            <div class="modal-body p-0">
+            <div wire:loading.flex wire:target="set_permission, reset_permission" class="row h-px-100 justify-content-center align-items-center mb-4">
+                <div class="sk-swing w-px-75 h-px-75">
+                    <div class="sk-swing-dot"></div>
+                    <div class="sk-swing-dot"></div>
+                </div>
+                <h5 class="text-center">Mengambil Data</h5>
+            </div>
+
+            <div class="modal-body p-0" wire:loading.remove wire:target="set_permission, reset_permission">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">{{ (is_null($permission_id) ? 'Tambah' : 'Edit') }} Izin</h4>
@@ -246,11 +253,19 @@ new class extends Component {
             initSelect2();
 
             $(document).on('change', '.select2_permission', function () {
-                $wire.dispatch('set_permission_field', { field: $(this).attr('id'), value: $(this).val() });
+                $wire.set_permission_field($(this).attr('id'), $(this).val());
+            });
+
+            $(document).on('click', '#btn_permission_add', function () {
+                $wire.reset_permission();
+            });
+
+            $(document).on('click', '.btn_permission_edit', function () {
+                $wire.set_permission($(this).attr('value'));
             });
 
             $(document).on('click', '.btn_permission_delete', function () {
-                $wire.dispatch('ask_to_delete_permission', { permission_id: $(this).attr('value') });
+                $wire.ask_to_delete_permission($(this).attr('value'));
             });
 
             window.Livewire.on('re_init_select2', () => {
