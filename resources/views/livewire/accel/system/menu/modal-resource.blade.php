@@ -123,12 +123,9 @@ new class extends Component {
 }; ?>
 
 <div wire:ignore.self class="modal fade" id="modal_menu_resource" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-simple">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header border-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div wire:loading wire:target="set_menu" class="row h-px-100 justify-content-center align-items-center mb-6">
+            <div wire:loading.flex wire:target="set_menu, reset_menu" class="row h-px-100 justify-content-center align-items-center mb-4">
                 <div class="sk-swing w-px-75 h-px-75">
                     <div class="sk-swing-dot"></div>
                     <div class="sk-swing-dot"></div>
@@ -136,12 +133,16 @@ new class extends Component {
                 <h5 class="text-center">Mengambil Data</h5>
             </div>
 
-            <div class="modal-body" wire:loading.remove wire:target="set_menu">
+            <div wire:loading.remove wire:target="set_menu, reset_menu" class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div wire:loading.remove wire:target="set_menu, reset_menu" class="modal-body pt-0">
                 <div class="text-center mb-4">
-                    <h4 class="mb-2">{{ (is_null($menu_id) ? 'Tambah' : 'Edit') }} Menu</h4>
+                    <h3 class="mb-0">{{ (is_null($menu_id) ? 'Tambah' : 'Edit') }} Menu</h3>
                     <p>Di sini, Anda dapat {{ (is_null($menu_id) ? 'menambah data' : 'mengubah informasi') }} Menu.</p>
                 </div>
-                <form wire:submit="save" class="row" method="POST">
+                <form wire:submit="save" method="POST">
                     @csrf
                     <x-ui::forms.select
                         wire-model="menu_app_id"
@@ -248,6 +249,10 @@ new class extends Component {
 
             $(document).on('change', '.select2_menu', function () {
                 $wire.set_menu_field($(this).attr('id'), $(this).val())
+            });
+
+            $(document).on('click', '#btn_menu_add', function () {
+                $wire.reset_menu();
             });
 
             $(document).on('click', '.btn_menu_edit', function () {

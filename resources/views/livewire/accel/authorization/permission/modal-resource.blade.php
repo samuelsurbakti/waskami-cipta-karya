@@ -91,8 +91,8 @@ new class extends Component {
             ]);
         }
 
-        $this->dispatch('refreshDatatable');
         $this->dispatch('close_modal_permission_resource');
+        $this->dispatch('refreshDatatable');
 
         LivewireAlert::title('')
             ->text('Berhasil ' . (is_null($this->permission_id) ? 'menambah' : 'mengubah') . ' Izin')

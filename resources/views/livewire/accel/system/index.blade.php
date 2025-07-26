@@ -1,10 +1,16 @@
 <?php
 
+use App\Models\Sys\App;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
 new #[Layout('ui.layouts.horizontal')] class extends Component {
-    //
+    public $apps;
+
+    public function mount()
+    {
+        $this->apps = App::orderBy('order_number')->get();
+    }
 }; ?>
 
 @push('page_styles')
@@ -27,6 +33,15 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 @endpush
 
 <div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-0">Daftar Aplikasi</h4>
+    <div class="row g-4 mb-4">
+        @foreach($apps as $app)
+            <livewire:accel.system.app.item :$app :key="$app->id" />
+        @endforeach
+
+
+    </div>
+
     <div class="row mb-4">
         @can('Accel | Sistem | Menu | Melihat Daftar Data')
             <h4 class="fw-bold py-3 mb-0">Daftar Menu</h4>
@@ -35,5 +50,6 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
         @endcan
     </div>
 
+    <livewire:accel.system.app.modal-resource />
     <livewire:accel.system.menu.modal-resource />
 </div>

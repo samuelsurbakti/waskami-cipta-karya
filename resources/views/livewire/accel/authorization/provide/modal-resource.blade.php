@@ -134,7 +134,7 @@ new class extends Component {
                     <h3 class="mb-0">Berikan Izin</h3>
                     <p>Di sini, Anda dapat mengelola Izin untuk Peran {{ ($role ? $role->name : '') }}</p>
                 </div>
-                <form wire:submit="save" class="row" method="POST">
+                <form wire:submit="save" method="POST">
                     @csrf
                     @if ($role)
                         @foreach($apps as $app)

@@ -129,17 +129,17 @@ class MenusTable extends DataTableComponent
 
     public function actions(): array
     {
-        return [
-            Action::make('Tambah Data')
-            ->setWireAction("wire:click")
-            ->setWireActionDispatchParams("'reset_menu'")
-            ->setActionAttributes([
-                'class' => 'btn btn-sm btn-label-primary',
-                'data-bs-toggle '=> 'modal',
-                'data-bs-target' => '#modal_menu_resource',
-                'default-colors' => false,
-                'default-styling' => false
-            ]),
-        ];
+        return array_filter([
+            auth()->user()->hasPermissionTo('Accel | Sistem | Menu | Menambah Data') ?
+                Action::make('Tambah Data')
+                    ->setActionAttributes([
+                        'id' => 'btn_menu_add',
+                        'class' => 'btn btn-sm btn-label-primary',
+                        'data-bs-toggle '=> 'modal',
+                        'data-bs-target' => '#modal_menu_resource',
+                        'default-colors' => false,
+                        'default-styling' => false
+                    ]) : null,
+        ]);
     }
 }
