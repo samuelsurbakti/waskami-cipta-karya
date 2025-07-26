@@ -19,7 +19,7 @@ new class extends Component {
     #[Validate('required|string', as: 'Aplikasi')]
     public ?string $permission_app_id = null;
 
-    #[Validate('required|string', as: 'Menu')]
+    #[Validate('required_unless:permission_type,App|nullable|string', as: 'Menu')]
     public ?string $permission_menu_id = null;
 
     #[Validate('required|string', as: 'Izin')]
@@ -146,7 +146,7 @@ new class extends Component {
 }; ?>
 
 <div wire:ignore.self class="modal fade" id="modal_permission_resource" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-simple">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div wire:loading.flex wire:target="set_permission, reset_permission" class="row h-px-100 justify-content-center align-items-center mb-4">
                 <div class="sk-swing w-px-75 h-px-75">
@@ -156,11 +156,14 @@ new class extends Component {
                 <h5 class="text-center">Mengambil Data</h5>
             </div>
 
-            <div class="modal-body p-0" wire:loading.remove wire:target="set_permission, reset_permission">
+            <div wire:loading.remove wire:target="set_permission, reset_permission" class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">{{ (is_null($permission_id) ? 'Tambah' : 'Edit') }} Izin</h4>
-                    <p class="address-subtitle">Di sini, Anda dapat {{ (is_null($permission_id) ? 'menambah data' : 'mengubah informasi') }} Izin.</p>
+            </div>
+
+            <div wire:loading.remove wire:target="set_permission, reset_permission" class="modal-body pt-0">
+                <div class="text-center mb-4">
+                    <h3 class="mb-0">{{ (is_null($permission_id) ? 'Tambah' : 'Edit') }} Izin</h4>
+                    <p>Di sini, Anda dapat {{ (is_null($permission_id) ? 'menambah data' : 'mengubah informasi') }} Izin.</p>
                 </div>
                 <form wire:submit="save" method="POST">
                     @csrf

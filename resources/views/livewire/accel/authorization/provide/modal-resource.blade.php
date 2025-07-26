@@ -117,12 +117,21 @@ new class extends Component {
 <div wire:ignore.self class="modal fade" id="modal_provide_permission" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header border-0">
+            <div wire:loading.flex wire:target="set_role_for_provide" class="row h-px-100 justify-content-center align-items-center my-4">
+                <div class="sk-swing w-px-75 h-px-75">
+                    <div class="sk-swing-dot"></div>
+                    <div class="sk-swing-dot"></div>
+                </div>
+                <h5 class="text-center">Mengambil Data</h5>
+            </div>
+
+            <div wire:loading.remove wire:target="set_role_for_provide" class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+
+            <div wire:loading.remove wire:target="set_role_for_provide" class="modal-body pt-0">
                 <div class="text-center mb-4">
-                    <h3>Berikan Izin</h3>
+                    <h3 class="mb-0">Berikan Izin</h3>
                     <p>Di sini, Anda dapat mengelola Izin untuk Peran {{ ($role ? $role->name : '') }}</p>
                 </div>
                 <form wire:submit="save" class="row" method="POST">
@@ -140,7 +149,7 @@ new class extends Component {
                                     </div>
                                     <div class="col-3 d-flex justify-content-end align-items-end">
                                         <label class="switch switch-square me-0">
-                                            <input id="app_{{ $app->id }}" wire:click="$dispatch('app_switch', { app_id: '{{ $app->id }}' })" type="checkbox" class="switch-input" {{ ($role->hasPermissionTo($app->app_permission->name) ? 'checked' : '') }}>
+                                            <input id="app_{{ $app->id }}" wire:click="'app_switch('{{ $app->id }}')" type="checkbox" class="switch-input" {{ ($role->hasPermissionTo($app->app_permission->name) ? 'checked' : '') }}>
                                             <span class="switch-toggle-slider">
                                                 <span class="switch-on">
                                                     <i class="icon-base bx bx-check"></i>
@@ -167,7 +176,7 @@ new class extends Component {
                                             </div>
                                             <div class="col-3 d-flex justify-content-end align-items-end">
                                                 <label class="switch switch-square me-0">
-                                                    <input id="menu_{{ $menu->id }}" wire:click="$dispatch(menu_switch, { menu_id: '{{ $menu->id }}' })" type="checkbox" class="switch-input" {{ ($role->hasPermissionTo($menu->menu_permission->name) ? 'checked' : '') }}>
+                                                    <input id="menu_{{ $menu->id }}" wire:click="menu_switch('{{ $menu->id }}')" type="checkbox" class="switch-input" {{ ($role->hasPermissionTo($menu->menu_permission->name) ? 'checked' : '') }}>
                                                     <span class="switch-toggle-slider">
                                                         <span class="switch-on">
                                                             <i class="icon-base bx bx-check"></i>
@@ -220,3 +229,13 @@ new class extends Component {
         </div>
     </div>
 </div>
+
+@script
+    <script>
+        $(document).ready(function () {
+            $(document).on('click', '.btn_provide', function () {
+                $wire.set_role_for_provide($(this).attr('value'));
+            });
+        });
+    </script>
+@endscript
