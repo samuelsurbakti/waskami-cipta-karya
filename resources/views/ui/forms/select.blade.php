@@ -13,7 +13,7 @@
 <div class="{{ $containerClass }}">
     <label class="form-label" for="{{ $wireModel }}">{{ $label }}</label>
     <select
-        wire:model="{{ $wireModel }}"
+        wire:model.blur="{{ $wireModel }}"
         id="{{ $wireModel }}"
         {{ $attributes->merge(['class' => 'form-select '.$initSelect2Class.' ' . ($errors->has(str_replace('wire:model.', '', $wireModel)) ? 'is-invalid' : '')]) }}
         style="width: 100%;"

@@ -4,6 +4,7 @@ use App\Models\Sys\App;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Validate;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 new class extends Component {
     public ?string $app_id = null;
@@ -53,6 +54,8 @@ new class extends Component {
                 'subdomain' => $this->app_subdomain,
                 'order_number' => $this->app_order_number,
             ]);
+
+            $this->dispatch("refresh_app_component.{$app->id}");
         }
 
         $this->dispatch('close_modal_app_resource');
@@ -71,19 +74,14 @@ new class extends Component {
 <div wire:ignore.self class="modal fade" id="modal_app_resource" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div wire:loading.flex wire:target="set_app, reset_app" class="row h-px-100 justify-content-center align-items-center mb-4">
-                <div class="sk-swing w-px-75 h-px-75">
-                    <div class="sk-swing-dot"></div>
-                    <div class="sk-swing-dot"></div>
-                </div>
-                <h5 class="text-center">Mengambil Data</h5>
-            </div>
+            <x-ui::elements.loading text="Mengambil Data" target="set_app, reset_app" />
+            <x-ui::elements.loading text="Menyimpan Data" target="save" />
 
-            <div wire:loading.remove wire:target="set_app, reset_app" class="modal-header border-0">
+            <div wire:loading.remove wire:target="set_app, reset_app, save" class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div wire:loading.remove wire:target="set_app, reset_app" class="modal-body pt-0">
+            <div wire:loading.remove wire:target="set_app, reset_app, save" class="modal-body pt-0">
                 <div class="text-center mb-4">
                     <h3 class="mb-0">{{ (is_null($app_id) ? 'Tambah' : 'Edit') }} Aplikasi</h3>
                     <p>Di sini, Anda dapat {{ (is_null($app_id) ? 'menambah data' : 'mengubah informasi') }} Aplikasi.</p>

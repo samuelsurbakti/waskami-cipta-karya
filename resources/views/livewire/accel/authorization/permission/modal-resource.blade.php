@@ -37,6 +37,7 @@ new class extends Component {
 
         $this->permission_type = $permission->type;
         $this->permission_app_id = $permission->app_id;
+        $this->menus = Menu::where('app_id', $this->permission_app_id)->orderBy('order_number')->get();
         $this->permission_menu_id = $permission->menu_id;
 
         $this->permission_name = $permission->name;
@@ -148,19 +149,14 @@ new class extends Component {
 <div wire:ignore.self class="modal fade" id="modal_permission_resource" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div wire:loading.flex wire:target="set_permission, reset_permission" class="row h-px-100 justify-content-center align-items-center mb-4">
-                <div class="sk-swing w-px-75 h-px-75">
-                    <div class="sk-swing-dot"></div>
-                    <div class="sk-swing-dot"></div>
-                </div>
-                <h5 class="text-center">Mengambil Data</h5>
-            </div>
+            <x-ui::elements.loading text="Mengambil Data" target="set_permission, reset_permission" />
+            <x-ui::elements.loading text="Menyimpan Data" target="save" />
 
-            <div wire:loading.remove wire:target="set_permission, reset_permission" class="modal-header border-0">
+            <div wire:loading.remove wire:target="set_permission, reset_permission, save" class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div wire:loading.remove wire:target="set_permission, reset_permission" class="modal-body pt-0">
+            <div wire:loading.remove wire:target="set_permission, reset_permission, save" class="modal-body pt-0">
                 <div class="text-center mb-4">
                     <h3 class="mb-0">{{ (is_null($permission_id) ? 'Tambah' : 'Edit') }} Izin</h4>
                     <p>Di sini, Anda dapat {{ (is_null($permission_id) ? 'menambah data' : 'mengubah informasi') }} Izin.</p>
@@ -203,7 +199,7 @@ new class extends Component {
                     />
 
                     <x-ui::forms.input
-                        wire:model.live="permission_name"
+                        wire:model.blur="permission_name"
                         type="text"
                         label="Izin"
                         placeholder="Izin"
@@ -211,7 +207,7 @@ new class extends Component {
                     />
 
                     <x-ui::forms.input
-                        wire:model.live="permission_number"
+                        wire:model.blur="permission_number"
                         type="text"
                         label="Urutan"
                         placeholder="Urutan"

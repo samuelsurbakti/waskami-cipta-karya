@@ -11,6 +11,12 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
     {
         $this->apps = App::orderBy('order_number')->get();
     }
+
+    #[On('re_render_apps_container')]
+    public function re_render_apps_container()
+    {
+        $this->mount();
+    }
 }; ?>
 
 @push('page_styles')
@@ -34,7 +40,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-0">Daftar Aplikasi</h4>
-    <div class="row g-4 mb-4">
+    <div class="row g-6">
         @foreach($apps as $app)
             <livewire:accel.system.app.item :$app :key="$app->id" />
         @endforeach
@@ -42,7 +48,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 
     </div>
 
-    <div class="row mb-4">
+    <div class="row mt-12">
         @can('Accel | Sistem | Menu | Melihat Daftar Data')
             <h4 class="fw-bold py-3 mb-0">Daftar Menu</h4>
 

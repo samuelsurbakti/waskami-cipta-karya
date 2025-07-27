@@ -117,13 +117,7 @@ new class extends Component {
 <div wire:ignore.self class="modal fade" id="modal_provide_permission" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
-            <div wire:loading.flex wire:target="set_role_for_provide" class="row h-px-100 justify-content-center align-items-center my-4">
-                <div class="sk-swing w-px-75 h-px-75">
-                    <div class="sk-swing-dot"></div>
-                    <div class="sk-swing-dot"></div>
-                </div>
-                <h5 class="text-center">Mengambil Data</h5>
-            </div>
+            <x-ui::elements.loading text="Mengambil Data" target="set_role_for_provide" />
 
             <div wire:loading.remove wire:target="set_role_for_provide" class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -138,16 +132,16 @@ new class extends Component {
                     @csrf
                     @if ($role)
                         @foreach($apps as $app)
-                            <div class="d-flex my-3">
-                                <div class="flex-shrink-0">
-                                    <img src="/src/assets/illustrations/app/{{ $app->image }}.svg" class="h-100 me-3" alt="{{ $app->name }} App Image">
+                            <div class="d-flex">
+                                <div class="d-flex">
+                                    <img src="/src/assets/illustrations/app/{{ $app->image }}.svg" class="w-px-50 me-3" alt="{{ $app->name }} App Image">
                                 </div>
                                 <div class="flex-grow-1 row">
                                     <div class="col-9 mb-sm-0 mb-2">
                                         <h6 class="mb-0">{{ $app->name }}</h6>
                                         <small class="text-muted">{{ $app->subdomain }}</small>
                                     </div>
-                                    <div class="col-3 d-flex justify-content-end align-items-end">
+                                    <div class="col-3 d-flex justify-content-end">
                                         <label class="switch switch-square me-0">
                                             <input id="app_{{ $app->id }}" wire:click="'app_switch('{{ $app->id }}')" type="checkbox" class="switch-input" {{ ($role->hasPermissionTo($app->app_permission->name) ? 'checked' : '') }}>
                                             <span class="switch-toggle-slider">

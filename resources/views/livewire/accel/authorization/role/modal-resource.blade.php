@@ -59,13 +59,19 @@ new class extends Component {
 }; ?>
 
 <div wire:ignore.self class="modal fade" id="modal_role_resource" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-simple">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-body p-0">
+            <x-ui::elements.loading text="Mengambil Data" target="set_role, reset_role" />
+            <x-ui::elements.loading text="Menyimpan Data" target="save" />
+
+            <div wire:loading.remove wire:target="set_role, reset_role, save" class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">{{ is_null($role_id) ? 'Tambah' : 'Edit' }} Peran</h4>
-                    <p class="address-subtitle">Di sini, Anda dapat {{ is_null($role_id) ? 'menambah data' : 'mengubah informasi' }} Peran.</p>
+            </div>
+
+            <div wire:loading.remove wire:target="set_role, reset_role, save" class="modal-body pt-0">
+                <div class="text-center mb-4">
+                    <h3 class="mb-0">{{ is_null($role_id) ? 'Tambah' : 'Edit' }} Peran</h3>
+                    <p>Di sini, Anda dapat {{ is_null($role_id) ? 'menambah data' : 'mengubah informasi' }} Peran.</p>
                 </div>
 
                 <form wire:submit="save" method="POST">
@@ -98,6 +104,12 @@ new class extends Component {
             var modalElement = document.getElementById('modal_role_resource');
             var modal = bootstrap.Modal.getInstance(modalElement)
             modal.hide();
+        });
+
+        $(document).ready(function () {
+            $(document).on('click', '.btn_role_edit', function () {
+                $wire.set_role($(this).attr('value'));
+            });
         });
     </script>
 @endscript

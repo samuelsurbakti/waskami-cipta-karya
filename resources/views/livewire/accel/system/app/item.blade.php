@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Sys\App;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 
 new class extends Component {
@@ -11,8 +12,8 @@ new class extends Component {
         //
     }
 
-    #[On('refresh_role_component{role.uuid}')]
-    public function refreshComponent()
+    #[On('refresh_app_component.{app.id}')]
+    public function refresh_app_component()
     {
         //
     }

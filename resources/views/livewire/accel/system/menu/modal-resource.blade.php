@@ -105,6 +105,7 @@ new class extends Component {
         }
 
         $this->dispatch('close_modal_menu_resource');
+        $this->dispatch('refreshDatatable');
 
         LivewireAlert::title('')
             ->text('Berhasil '.(is_null($this->menu_id) ? 'menambah' : 'mengubah').' Menu')
@@ -116,6 +117,40 @@ new class extends Component {
         $this->reset_menu();
     }
 
+    #[On('ask_to_delete_menu')]
+    public function ask_to_delete_menu($menu_id)
+    {
+        $this->menu_id = $menu_id;
+        $menu = Menu::find($this->menu_id);
+        LivewireAlert::title('Peringatan')
+            ->text('Perintah ini akan menghapus Menu '.$menu->title.' dari aplikasi '.$menu->app->name.', Anda yakin ingin melanjutkan?')
+            ->asConfirm()
+            ->withConfirmButton('Lanjutkan')
+            ->withDenyButton('Batalkan')
+            ->onConfirm('delete_menu')
+            ->show();
+    }
+
+    public function delete_menu()
+    {
+        $menu = Menu::find($this->menu_id);
+
+        if($menu) {
+            $menu->delete();
+
+            $this->dispatch('refreshDatatable');
+
+            LivewireAlert::title('')
+            ->text('Berhasil menghapus menu')
+            ->success()
+            ->toast()
+            ->position('bottom-end')
+            ->show();
+
+            $this->reset_menu();
+        }
+    }
+
     public function mount()
     {
         $this->apps = App::orderBy('order_number')->get();
@@ -125,19 +160,14 @@ new class extends Component {
 <div wire:ignore.self class="modal fade" id="modal_menu_resource" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div wire:loading.flex wire:target="set_menu, reset_menu" class="row h-px-100 justify-content-center align-items-center mb-4">
-                <div class="sk-swing w-px-75 h-px-75">
-                    <div class="sk-swing-dot"></div>
-                    <div class="sk-swing-dot"></div>
-                </div>
-                <h5 class="text-center">Mengambil Data</h5>
-            </div>
+            <x-ui::elements.loading text="Mengambil Data" target="set_menu, reset_menu" />
+            <x-ui::elements.loading text="Menyimpan Data" target="save" />
 
-            <div wire:loading.remove wire:target="set_menu, reset_menu" class="modal-header border-0">
+            <div wire:loading.remove wire:target="set_menu, reset_menu, save" class="modal-header border-0">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div wire:loading.remove wire:target="set_menu, reset_menu" class="modal-body pt-0">
+            <div wire:loading.remove wire:target="set_menu, reset_menu, save" class="modal-body pt-0">
                 <div class="text-center mb-4">
                     <h3 class="mb-0">{{ (is_null($menu_id) ? 'Tambah' : 'Edit') }} Menu</h3>
                     <p>Di sini, Anda dapat {{ (is_null($menu_id) ? 'menambah data' : 'mengubah informasi') }} Menu.</p>

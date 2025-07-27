@@ -26,11 +26,6 @@ new class extends Component {
         $this->roleUsersCount = $this->role->users_count;
         $this->users = $this->role->users;
     }
-
-    public function openModalHakAksesIzin()
-    {
-        $this->dispatch('role_permission_edit', role_id: $this->role->uuid);
-    }
 }; ?>
 
 <div class="col-xl-3 col-lg-6 col-md-6">
@@ -67,9 +62,9 @@ new class extends Component {
                         <small>Kelola Izin</small>
                     </x-ui::elements.button>
                     <x-ui::elements.button
-                        wire:click="$dispatch('set_role', { role_id: '{{ $role->uuid }}' })"
                         class="bg-success-subtle text-success btn_role_edit"
                         title="{{ $role->name }}"
+                        value="{{ $role->uuid }}"
                         data-bs-toggle="modal"
                         data-bs-target="#modal_role_resource"
                     >

@@ -39,7 +39,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-0">Daftar Peran</h4>
-    <div class="row g-4 mb-4">
+    <div class="row g-6">
         @foreach($roles as $role)
             <livewire:accel.authorization.role.item :$role :key="$role->uuid" />
         @endforeach
@@ -71,7 +71,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
         </div>
     </div>
 
-    <div class="row mb-4">
+    <div class="row mt-12">
         <h4 class="fw-bold py-3 mb-0">Daftar Izin</h4>
 
         <livewire:accel.authorization.permissions-table />
