@@ -52,24 +52,29 @@ new class extends Component {
                     <h4 class="mb-1">{{ $role->name }}</h4>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <x-ui::elements.button
-                        class="bg-primary-subtle text-primary btn_provide"
-                        title="{{ $role->name }}"
-                        value="{{ $role->uuid }}"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal_provide_permission"
-                    >
-                        <small>Kelola Izin</small>
-                    </x-ui::elements.button>
-                    <x-ui::elements.button
-                        class="bg-success-subtle text-success btn_role_edit"
-                        title="{{ $role->name }}"
-                        value="{{ $role->uuid }}"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal_role_resource"
-                    >
-                        <small>Edit Hak Akses</small>
-                    </x-ui::elements.button>
+                    @can('Accel - Otorisasi - Mengelola Otoritas')
+                        <x-ui::elements.button
+                            class="bg-primary-subtle text-primary btn_provide"
+                            title="{{ $role->name }}"
+                            value="{{ $role->uuid }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal_provide_permission"
+                        >
+                            <small>Kelola Izin</small>
+                        </x-ui::elements.button>
+                    @endcan
+
+                    @can('Accel - Otorisasi - Peran - Mengubah Data')
+                        <x-ui::elements.button
+                            class="bg-success-subtle text-success btn_role_edit"
+                            title="{{ $role->name }}"
+                            value="{{ $role->uuid }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal_role_resource"
+                        >
+                            <small>Edit Peran</small>
+                        </x-ui::elements.button>
+                    @endcan
                 </div>
             </div>
         </div>

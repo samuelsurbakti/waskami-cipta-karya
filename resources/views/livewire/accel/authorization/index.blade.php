@@ -38,46 +38,60 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 @endpush
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-0">Daftar Peran</h4>
-    <div class="row g-6">
-        @foreach($roles as $role)
-            <livewire:accel.authorization.role.item :$role :key="$role->uuid" />
-        @endforeach
+    @can('Accel - Otorisasi - Peran - Melihat Daftar Data')
+        <h4 class="fw-bold py-3 mb-0">Daftar Peran</h4>
+        <div class="row g-6">
+            @foreach($roles as $role)
+                <livewire:accel.authorization.role.item :$role :key="$role->uuid" />
+            @endforeach
 
-        <div class="col-xl-3 col-lg-6 col-md-6">
-            <div class="card h-100">
-                <div class="row h-100">
-                    <div class="col-sm-4 p-0 ps-2">
-                        <div class="d-flex align-items-end h-100 justify-content-center mt-sm-0 mt-3">
-                            <img src="/src/assets/illustrations/add-role.svg" class="img-fluid me-n3" alt="Add Role Illustration">
-                        </div>
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="card-body text-sm-end text-center ps-sm-0 p-4">
-                            <p class="mb-0">Butuh peran tambahan? Klik tombol dibawah ini untuk menambah peran.</p>
-                            <x-ui::elements.button
-                                wire:click="$dispatch('reset_role')"
-                                class="btn btn-sm btn-primary mt-3 text-nowrap"
-                                title="{{ $role->name }}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modal_role_resource"
-                            >
-                                Tentu
-                            </x-ui::elements.button>
+            @can('Accel - Otorisasi - Peran - Menambah Data')
+                <div class="col-xl-3 col-lg-6 col-md-6">
+                    <div class="card h-100">
+                        <div class="row h-100">
+                            <div class="col-sm-4 p-0 ps-2">
+                                <div class="d-flex align-items-end h-100 justify-content-center mt-sm-0 mt-3">
+                                    <img src="/src/assets/illustrations/add-role.svg" class="img-fluid me-n3" alt="Add Role Illustration">
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="card-body text-sm-end text-center ps-sm-0 p-4">
+                                    <p class="mb-0">Butuh peran tambahan? Klik tombol dibawah ini untuk menambah peran.</p>
+                                    <x-ui::elements.button
+                                        wire:click="$dispatch('reset_role')"
+                                        class="btn btn-sm btn-primary mt-3 text-nowrap"
+                                        title="{{ $role->name }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal_role_resource"
+                                    >
+                                        Tentu
+                                    </x-ui::elements.button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endcan
         </div>
-    </div>
+    @endcan
 
-    <div class="row mt-12">
-        <h4 class="fw-bold py-3 mb-0">Daftar Izin</h4>
+    @can('Accel - Otorisasi - Izin - Melihat Daftar Data')
+        <div class="row mt-12">
+            <h4 class="fw-bold py-3 mb-0">Daftar Izin</h4>
 
-        <livewire:accel.authorization.permissions-table />
-    </div>
+            <livewire:accel.authorization.permissions-table />
+        </div>
+    @endcan
 
-    <livewire:accel.authorization.role.modal-resource />
-    <livewire:accel.authorization.permission.modal-resource />
-    <livewire:accel.authorization.provide.modal-resource />
+    @canany(['Accel - Otorisasi - Peran - Menambah Data', 'Accel - Otorisasi - Peran - Mengubah Data'])
+        <livewire:accel.authorization.role.modal-resource />
+    @endcanany
+
+    @canany(['Accel - Otorisasi - Izin - Menambah Data', 'Accel - Otorisasi - Izin - Mengubah Data', 'Accel - Otorisasi - Izin - Menghapus Data'])
+        <livewire:accel.authorization.permission.modal-resource />
+    @endcanany
+
+    @can('Accel - Otorisasi - Mengelola Otoritas')
+        <livewire:accel.authorization.provide.modal-resource />
+    @endcan
 </div>

@@ -31,7 +31,7 @@ class MenuSeeder extends Seeder
                 Menu::create([
                     'app_id' => $app->id,
                     'title' => 'Akun',
-                    'icon' => 'bx bx-group',
+                    'icon' => 'bx bxs-user-account',
                     'url' => 'account',
                     'order_number' => $menu_no++,
                     'parent' => null,
@@ -56,6 +56,31 @@ class MenuSeeder extends Seeder
                     'order_number' => $menu_no++,
                     'parent' => null,
                     'member_of' => null
+                ]);
+            }
+
+            else if($app->name == 'AccelHr')
+            {
+                $menu_no = 1;
+
+                Menu::create([
+                    'app_id' => $app->id,
+                    'title' => 'Beranda',
+                    'icon' => 'bx bx-home',
+                    'url' => 'home',
+                    'order_number' => $menu_no++,
+                    'parent' => null,
+                    'member_of' => null
+                ]);
+
+                Menu::create([
+                    'app_id' => $app->id,
+                    'title' => 'Pekerja',
+                    'icon' => 'bx bx-group',
+                    'url' => 'worker',
+                    'order_number' => $menu_no++,
+                    'parent' => null,
+                    'member_of' => 'Manajemen'
                 ]);
             }
 

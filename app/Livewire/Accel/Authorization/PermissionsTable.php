@@ -133,17 +133,17 @@ class PermissionsTable extends DataTableComponent
 
     public function actions(): array
     {
-        return [
-            Action::make('Tambah Data')
-            ->setActionAttributes([
-                'id' => 'btn_permission_add',
-                'class' => 'btn btn-sm btn-label-primary',
-                'data-bs-toggle '=> 'modal',
-                'data-bs-target' => '#modal_permission_resource',
-                'default-colors' => false,
-                'default-styling' => false
-            ]),
-        ];
-
+        return array_filter([
+            auth()->user()->hasPermissionTo('Accel - Otorisasi - Izin - Menambah Data') ?
+                Action::make('Tambah Data')
+                    ->setActionAttributes([
+                        'id' => 'btn_permission_add',
+                        'class' => 'btn btn-sm btn-label-primary',
+                        'data-bs-toggle '=> 'modal',
+                        'data-bs-target' => '#modal_permission_resource',
+                        'default-colors' => false,
+                        'default-styling' => false
+                    ]) : null,
+        ]);
     }
 }

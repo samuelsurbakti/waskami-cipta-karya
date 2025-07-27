@@ -33,9 +33,198 @@ class PermissionSeeder extends Seeder
                     'type' => 'Menu',
                     'app_id' => $app->id,
                     'menu_id' => $menu->id,
-                    'name' => $app->name.' | '.$menu->title,
+                    'name' => $app->name.' - '.$menu->title,
                     'guard_name' => 'web',
                     'number' => $menu_number++,
+                ]);
+
+                if($app->name == 'Accel' && $menu->title == 'Otorisasi')
+                {
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Mengelola Otoritas',
+                        'guard_name' => 'web',
+                        'number' => 1,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Peran - Melihat Daftar Data',
+                        'guard_name' => 'web',
+                        'number' => 11,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Peran - Menambah Data',
+                        'guard_name' => 'web',
+                        'number' => 12,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Peran - Mengubah Data',
+                        'guard_name' => 'web',
+                        'number' => 13,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Izin - Melihat Daftar Data',
+                        'guard_name' => 'web',
+                        'number' => 21,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Izin - Menambah Data',
+                        'guard_name' => 'web',
+                        'number' => 22,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Izin - Mengubah Data',
+                        'guard_name' => 'web',
+                        'number' => 23,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Izin - Menghapus Data',
+                        'guard_name' => 'web',
+                        'number' => 24,
+                    ]);
+                }
+
+                if($app->name == 'Accel' && $menu->title == 'Sistem')
+                {
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Aplikasi - Melihat Daftar Data',
+                        'guard_name' => 'web',
+                        'number' => 11,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Aplikasi - Menambah Data',
+                        'guard_name' => 'web',
+                        'number' => 12,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Aplikasi - Mengubah Data',
+                        'guard_name' => 'web',
+                        'number' => 13,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Menu - Melihat Daftar Data',
+                        'guard_name' => 'web',
+                        'number' => 21,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Menu - Menambah Data',
+                        'guard_name' => 'web',
+                        'number' => 22,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Menu - Mengubah Data',
+                        'guard_name' => 'web',
+                        'number' => 23,
+                    ]);
+
+                    Permission::create([
+                        'type' => 'Permission',
+                        'app_id' => $app->id,
+                        'menu_id' => $menu->id,
+                        'name' => $app->name.' - '.$menu->title.' - Menu - Menghapus Data',
+                        'guard_name' => 'web',
+                        'number' => 24,
+                    ]);
+                }
+            }
+
+            if($app->name == 'AccelHr' && $menu->title == 'Pekerja')
+            {
+                Permission::create([
+                    'type' => 'Permission',
+                    'app_id' => $app->id,
+                    'menu_id' => $menu->id,
+                    'name' => $app->name.' - '.$menu->title.' - Melihat Daftar Data',
+                    'guard_name' => 'web',
+                    'number' => 21,
+                ]);
+
+                Permission::create([
+                    'type' => 'Permission',
+                    'app_id' => $app->id,
+                    'menu_id' => $menu->id,
+                    'name' => $app->name.' - '.$menu->title.' - Melihat Data',
+                    'guard_name' => 'web',
+                    'number' => 22,
+                ]);
+
+                Permission::create([
+                    'type' => 'Permission',
+                    'app_id' => $app->id,
+                    'menu_id' => $menu->id,
+                    'name' => $app->name.' - '.$menu->title.' - Menambah Data',
+                    'guard_name' => 'web',
+                    'number' => 23,
+                ]);
+
+                Permission::create([
+                    'type' => 'Permission',
+                    'app_id' => $app->id,
+                    'menu_id' => $menu->id,
+                    'name' => $app->name.' - '.$menu->title.' - Mengubah Data',
+                    'guard_name' => 'web',
+                    'number' => 24,
+                ]);
+
+                Permission::create([
+                    'type' => 'Permission',
+                    'app_id' => $app->id,
+                    'menu_id' => $menu->id,
+                    'name' => $app->name.' - '.$menu->title.' - Menghapus Data',
+                    'guard_name' => 'web',
+                    'number' => 25,
                 ]);
             }
         }

@@ -130,7 +130,7 @@ class MenusTable extends DataTableComponent
     public function actions(): array
     {
         return array_filter([
-            auth()->user()->hasPermissionTo('Accel | Sistem | Menu | Menambah Data') ?
+            auth()->user()->hasPermissionTo('Accel - Sistem - Menu - Menambah Data') ?
                 Action::make('Tambah Data')
                     ->setActionAttributes([
                         'id' => 'btn_menu_add',

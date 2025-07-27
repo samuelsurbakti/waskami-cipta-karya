@@ -193,7 +193,7 @@ new class extends Component {
                                                 <div class="flex-grow-1 row">
                                                     <hr class="my-2 text-primary">
                                                     <div class="col-9 mb-sm-0 mb-2">
-                                                        <h6 class="mb-0">{{ Str::after(Str::after($permission->name, ' | '), ' | '); }}</h6>
+                                                        <h6 class="mb-0">{{ Str::after(Str::after($permission->name, ' - '), ' - '); }}</h6>
                                                     </div>
                                                     <div class="col-3 d-flex justify-content-end align-items-end">
                                                         <label class="switch switch-square me-0">

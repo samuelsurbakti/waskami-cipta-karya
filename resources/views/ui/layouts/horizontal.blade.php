@@ -6,7 +6,7 @@
 	<body>
 		<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
 			<div class="layout-container">
-				@include('ui.layouts.parts.navbar')
+				@include('ui.layouts.horizontal.navbar')
 
                 <div class="layout-page">
 					<div class="content-wrapper">
