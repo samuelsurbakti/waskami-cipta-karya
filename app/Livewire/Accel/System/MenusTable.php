@@ -62,8 +62,8 @@ class MenusTable extends DataTableComponent
                 ->excludeFromColumnSelect()
                 ->label(fn ($row, Column $column) => TableHelper::action_buttons(recordId: $row->identifier,
                         permissions: [
-                            'edit' => 'Accel | Portal',
-                            'delete' => 'Accel | Sistem',
+                            'edit' => 'Accel - Sistem - Menu - Mengubah Data',
+                            'delete' => 'Accel - Sistem - Menu - Menghapus Data',
                         ],
                         cssClasses: [
                             'edit_btn' => 'btn_menu_edit',

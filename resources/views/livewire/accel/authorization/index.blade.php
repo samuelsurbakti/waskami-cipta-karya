@@ -33,8 +33,6 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 
     {{-- Select2 --}}
     <script src="/themes/vendor/libs/select2/select2.js"></script>
-
-    @include('js.accel.authorization.index')
 @endpush
 
 <div class="container-xxl flex-grow-1 container-p-y">

@@ -63,8 +63,8 @@ class PermissionsTable extends DataTableComponent
                 ->excludeFromColumnSelect()
                 ->label(fn ($row, Column $column) => TableHelper::action_buttons(recordId: $row->uuid,
                         permissions: [
-                            'edit' => 'Accel | Portal',
-                            'delete' => 'Accel | Sistem',
+                            'edit' => 'Accel - Otorisasi - Izin - Mengubah Data',
+                            'delete' => 'Accel - Otorisasi - Izin - Menghapus Data',
                         ],
                         cssClasses: [
                             'edit_btn' => 'btn_permission_edit',

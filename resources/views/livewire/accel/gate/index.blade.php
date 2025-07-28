@@ -17,7 +17,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
     <div class="row g-6">
         <div class="col-lg-6 order-0">
             <div class="card h-100">
-                <div class="card-body d-flex pb-0">
+                <div class="card-body pb-0 d-sm-grid d-md-flex">
                     <div class="d-grid align-content-end">
                         <h5 class="card-title text-primary">Halo {{ auth()->user()->name }}!</h5>
                         <p class="mb-4">
@@ -46,3 +46,19 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
         @endforeach
     </div>
 </div>
+
+@script
+    <script>
+        $(document).ready(function () {
+            $(document).on('click', '.app_link', function () {
+                const url = $(this).attr('link');
+
+                if (isMobileDevice()) {
+                    document.location.href = 'https://'+url;
+                } else {
+                    window.open('https://'+url, "_blank");
+                }
+            });
+        });
+    </script>
+@endscript
