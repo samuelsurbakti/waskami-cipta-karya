@@ -13,11 +13,17 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 
     {{-- Sweetalert2 --}}
     <link rel="stylesheet" href="/themes/vendor/libs/sweetalert2/sweetalert2.css" />
+
+    {{-- Select2 --}}
+    <link rel="stylesheet" href="/themes/vendor/libs/select2/select2.css" />
 @endpush
 
 @push('page_scripts')
     {{-- Sweetalert2 --}}
     <script src="/themes/vendor/libs/sweetalert2/sweetalert2.js"></script>
+
+    {{-- Select2 --}}
+    <script src="/themes/vendor/libs/select2/select2.js"></script>
 @endpush
 
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -31,7 +37,7 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
                             <img src="/src/assets/illustrations/add-worker.svg" class="img-fluid me-n3" alt="Image" width="120px">
                         </div>
                         <p class="card-text">Punya pekerja baru? Klik tombol di bawah untuk tambah pekerja!</p>
-                        <button type="button" class="btn btn-primary" id="btn_add" data-bs-target="#modal_resource" data-bs-toggle="modal">
+                        <button type="button" class="btn btn-primary" id="btn_worker_add" data-bs-target="#modal_worker_resource" data-bs-toggle="modal">
                             <span class="icon-base bx bx-plus icon-xs me-2"></span>Tambahkan
                         </button>
                     </div>
@@ -48,6 +54,10 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 
 
     </div>
+
+    @canany(['AccelHr - Pekerja - Menambah Data', 'AccelHr - Pekerja - Mengubah Data', 'AccelHr - Pekerja - Menghapus Data'])
+        <livewire:accel-hr.worker.modal-resource />
+    @endcanany
 
     @canany(['AccelHr - Pekerja - Jenis - Menambah Data', 'AccelHr - Pekerja - Jenis - Mengubah Data', 'AccelHr - Pekerja - Jenis - Menghapus Data'])
         <livewire:accel-hr.worker.type.modal-resource />
