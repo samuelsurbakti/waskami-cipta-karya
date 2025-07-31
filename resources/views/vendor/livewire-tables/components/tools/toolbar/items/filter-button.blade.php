@@ -5,7 +5,7 @@
                 @class([
                     'ml-0 ml-md-2 mb-3 mb-md-0' => $isBootstrap4,
                     'ms-0 ms-md-2 mb-3 mb-md-0' => $isBootstrap5 && $this->searchIsEnabled(),
-                    'mb-3 mb-md-0' => $isBootstrap5 && !$this->searchIsEnabled(),
+                    'mb-2 mb-md-0' => $isBootstrap5 && !$this->searchIsEnabled(),
                 ])
 >
     <div

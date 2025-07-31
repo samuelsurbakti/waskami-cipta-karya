@@ -134,7 +134,7 @@ class MenusTable extends DataTableComponent
                 Action::make('Tambah Data')
                     ->setActionAttributes([
                         'id' => 'btn_menu_add',
-                        'class' => 'btn btn-sm btn-label-primary',
+                        'class' => 'btn w-100 btn-label-primary',
                         'data-bs-toggle '=> 'modal',
                         'data-bs-target' => '#modal_menu_resource',
                         'default-colors' => false,

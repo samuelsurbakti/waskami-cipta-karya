@@ -1,10 +1,22 @@
 <?php
 
+use App\Models\Hr\Worker;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
 new #[Layout('ui.layouts.vertical')] class extends Component {
-    //
+    public $workers;
+
+    public function mount()
+    {
+        $this->workers = Worker::orderBy('name')->get();
+    }
+
+    #[On('re_render_workers_container')]
+    public function re_render_workers_container()
+    {
+        $this->mount();
+    }
 }; ?>
 
 @push('page_styles')
@@ -32,7 +44,7 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
             @can('AccelHr - Pekerja - Menambah Data')
                 <div class="card text-center mb-6 border-top">
                     <div class="card-body">
-                        <h5 class="card-title">Laporan Baru</h5>
+                        <h5 class="card-title">Pekerja Baru</h5>
                         <div class="d-flex align-items-end justify-content-center mt-sm-0 mt-3">
                             <img src="/src/assets/illustrations/add-worker.svg" class="img-fluid me-n3" alt="Image" width="120px">
                         </div>
@@ -45,14 +57,22 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
             @endcan
 
             @can('AccelHr - Pekerja - Jenis - Melihat Daftar Data')
-                <div class="card">
-                    <h5 class="card-header pb-0 pt-2 text-center">Jenis Pekerja</h5>
+                <div class="card mb-6">
+                    <h5 class="card-header pb-0 pt-3 text-center">Jenis Pekerja</h5>
                     <livewire:accel-hr.worker.types-table />
                 </div>
             @endcan
         </div>
 
-
+        <div class="col-sm-12 col-md-8 col-lg-8">
+            <div class="row g-6">
+                @can('AccelHr - Pekerja - Melihat Daftar Data')
+                    @foreach($workers as $worker)
+                        <livewire:accel-hr.worker.item :$worker :key="$worker->id" />
+                    @endforeach
+                @endcan
+            </div>
+        </div>
     </div>
 
     @canany(['AccelHr - Pekerja - Menambah Data', 'AccelHr - Pekerja - Mengubah Data', 'AccelHr - Pekerja - Menghapus Data'])

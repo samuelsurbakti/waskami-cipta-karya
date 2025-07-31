@@ -17,49 +17,49 @@ class AppSeeder extends Seeder
 
         App::create([
             'name' => 'Accel',
-            'subdomain' => 'accel.waskami-cipta-karya.test',
+            'subdomain' => 'accel.waskamirealty.online',
             'image' => 'accel',
             'order_number' => $app_no++
         ]);
 
         App::create([
             'name' => 'AccelHr',
-            'subdomain' => 'hr.waskami-cipta-karya.test',
+            'subdomain' => 'hr.waskamirealty.online',
             'image' => 'accel-hr',
             'order_number' => $app_no++
         ]);
 
         App::create([
             'name' => 'AccelStock',
-            'subdomain' => 'stock.waskami-cipta-karya.test',
+            'subdomain' => 'stock.waskamirealty.online',
             'image' => 'accel-stock',
             'order_number' => $app_no++
         ]);
 
         App::create([
             'name' => 'AccelBuild',
-            'subdomain' => 'build.waskami-cipta-karya.test',
+            'subdomain' => 'build.waskamirealty.online',
             'image' => 'accel-build',
             'order_number' => $app_no++
         ]);
 
         App::create([
             'name' => 'AccelTask',
-            'subdomain' => 'task.waskami-cipta-karya.test',
+            'subdomain' => 'task.waskamirealty.online',
             'image' => 'accel-task',
             'order_number' => $app_no++
         ]);
 
         App::create([
             'name' => 'AccelDocs',
-            'subdomain' => 'docs.waskami-cipta-karya.test',
+            'subdomain' => 'docs.waskamirealty.online',
             'image' => 'accel-docs',
             'order_number' => $app_no++
         ]);
 
         App::create([
             'name' => 'AccelRef',
-            'subdomain' => 'ref.waskami-cipta-karya.test',
+            'subdomain' => 'ref.waskamirealty.online',
             'image' => 'accel-ref',
             'order_number' => $app_no++
         ]);

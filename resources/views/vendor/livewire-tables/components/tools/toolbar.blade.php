@@ -54,7 +54,7 @@
 
     <div x-cloak x-show="!currentlyReorderingStatus"
         @class([
-            'd-md-flex' => $isBootstrap,
+            'd-md-flex d-grid gap-2' => $isBootstrap,
             'md:flex md:items-center space-y-4 md:space-y-0 md:space-x-2' => $isTailwind,
         ])
     >

@@ -71,6 +71,8 @@ new class extends Component {
                 'whatsapp' => $this->worker_whatsapp,
                 'address' => $this->worker_address,
             ]);
+
+            $this->dispatch("re_render_workers_container");
         } else {
             $worker = Worker::findOrFail($this->worker_id);
 
@@ -81,6 +83,8 @@ new class extends Component {
                 'whatsapp' => $this->worker_whatsapp,
                 'address' => $this->worker_address,
             ]);
+
+            $this->dispatch("refresh_worker_component.{$worker->id}");
         }
 
         $this->dispatch('close_modal_worker_resource');

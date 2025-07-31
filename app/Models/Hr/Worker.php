@@ -2,6 +2,7 @@
 
 namespace App\Models\Hr;
 
+use App\Models\Hr\Worker\Type;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -23,5 +24,10 @@ class Worker extends Model
             ->useLogName('Pekerja')
             ->setDescriptionForEvent(fn(string $eventName) => ($eventName == 'created' ? 'Menambah' : ($eventName == 'updated' ? 'Mengubah' : 'Menghapus')))
             ->dontLogIfAttributesChangedOnly(['created_at', 'updated_at', 'deleted_at']);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class, 'type_id');
     }
 }

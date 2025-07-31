@@ -7,12 +7,9 @@
                 </span>
                 <span class="app-brand-text demo menu-text fw-bold text-heading">{{ $app->name }}</span>
             </a>
-            @isset($layout_menu_toggle)
-                {{ $layout_menu_toggle }}
-                {{-- <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
                     <i class="icon-base bx bx-chevron-left d-flex align-items-center justify-content-center"></i>
-                </a> --}}
-            @endisset
+                </a>
         </div>
         <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0  d-xl-none  ">
             <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">

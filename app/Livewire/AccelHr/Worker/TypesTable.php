@@ -55,7 +55,7 @@ class TypesTable extends DataTableComponent
                 Action::make('Tambah Data')
                     ->setActionAttributes([
                         'id' => 'btn_type_add',
-                        'class' => 'btn btn-sm btn-label-primary',
+                        'class' => 'btn w-100 btn-label-primary',
                         'data-bs-toggle '=> 'modal',
                         'data-bs-target' => '#modal_type_resource',
                         'default-colors' => false,

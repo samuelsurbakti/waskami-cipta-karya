@@ -49,7 +49,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
                         <div class="row h-100">
                             <div class="col-sm-4 p-0 ps-2">
                                 <div class="d-flex align-items-end h-100 justify-content-center mt-sm-0 mt-3">
-                                    <img src="/src/assets/illustrations/add-role.svg" class="img-fluid me-n3" alt="Add Role Illustration">
+                                    <img src="/src/assets/illustrations/add-role.svg" class="img-fluid h-px-120" alt="Add Role Illustration">
                                 </div>
                             </div>
                             <div class="col-sm-8">

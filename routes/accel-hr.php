@@ -3,7 +3,7 @@
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
 
-Route::domain('hr.waskami-cipta-karya.test')->group(function () {
+Route::domain('hr.waskamirealty.online')->group(function () {
     Route::group(['middleware' => ['auth']], function ()
     {
         Route::get('/', function () {
@@ -16,6 +16,10 @@ Route::domain('hr.waskami-cipta-karya.test')->group(function () {
 
         Route::group(['middleware' => ['permission:AccelHr - Pekerja'], 'prefix' => 'worker'], function () {
             Volt::route('', 'accel-hr.worker.index')->name('AccelHr | Worker');
+
+            Route::group(['middleware' => ['permission:AccelHr - Pekerja - Melihat Data'], 'prefix' => '{id}'], function () {
+                Volt::route('', 'accel-hr.worker.show')->name('AccelHr | Worker | Show');
+            });
         });
     });
 });
