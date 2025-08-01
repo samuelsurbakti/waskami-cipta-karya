@@ -11,7 +11,7 @@ new class extends Component {
     #[On('refresh_worker_component.{worker.id}')]
     public function refresh_worker_component()
     {
-        //
+        $this->dispatch('re_init_masonry');
     }
 }; ?>
 

@@ -3,7 +3,7 @@
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
 
-Route::domain('accel.waskami-cipta-karya.test')->group(function () {
+Route::domain('accel.waskamirealty.online')->group(function () {
     require __DIR__.'/auth.php';
 
     Route::get('/', function () {
