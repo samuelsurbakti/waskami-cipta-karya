@@ -120,6 +120,8 @@ new class extends Component {
         if($worker) {
             $worker->delete();
 
+            $this->dispatch("re_render_workers_container");
+
             LivewireAlert::title('')
             ->text('Berhasil menghapus pekerja')
             ->success()
@@ -230,6 +232,16 @@ new class extends Component {
                 })
             })
         }
+
+        document.addEventListener('livewire:load', () => {
+            Livewire.hook('message.processed', () => {
+                let grid = document.querySelector('[data-masonry]');
+                if (grid) {
+                    // Re-init Masonry (dengan asumsi kamu pakai Masonry v4)
+                    new Masonry(grid, JSON.parse(grid.dataset.masonry || '{}'));
+                }
+            });
+        });
 
         $(document).ready(function () {
             initSelect2();

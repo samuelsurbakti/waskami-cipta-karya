@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Hr\Worker;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
@@ -16,6 +17,7 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
     public function re_render_workers_container()
     {
         $this->mount();
+        $this->dispatch('re_init_masonry');
     }
 }; ?>
 
@@ -36,6 +38,9 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 
     {{-- Select2 --}}
     <script src="/themes/vendor/libs/select2/select2.js"></script>
+
+    {{-- Masonry --}}
+    <script src="/themes/vendor/libs/masonry/masonry.js"></script>
 @endpush
 
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -65,7 +70,7 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
         </div>
 
         <div class="col-sm-12 col-md-8 col-lg-8">
-            <div class="row g-6">
+            <div class="row g-6" data-masonry='{"percentPosition": true }'>
                 @can('AccelHr - Pekerja - Melihat Daftar Data')
                     @foreach($workers as $worker)
                         <livewire:accel-hr.worker.item :$worker :key="$worker->id" />
@@ -83,3 +88,21 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
         <livewire:accel-hr.worker.type.modal-resource />
     @endcanany
 </div>
+
+@script
+    <script>
+        $(document).ready(function () {
+            function initMasonry() {
+                let grid = document.querySelector('[data-masonry]');
+                if (grid) {
+                    // Re-init Masonry (dengan asumsi kamu pakai Masonry v4)
+                    new Masonry(grid, JSON.parse(grid.dataset.masonry || '{}'));
+                }
+            }
+
+            window.Livewire.on('re_init_masonry', () => {
+                setTimeout(initMasonry, 0)
+            })
+        });
+    </script>
+@endscript
