@@ -154,19 +154,6 @@ window.isHorizontalLayout = window.isHorizontalLayout || !1;
                         window.Helpers.switchImage(t)
                     })
                 })
-            }),
-
-            "undefined" != typeof i18next && "undefined" != typeof i18NextHttpBackend &&
-            i18next.use(i18NextHttpBackend).init({
-                lng: window.templateCustomizer ? window.templateCustomizer.settings.lang : "en",
-                debug: !1,
-                fallbackLng: "en",
-                backend: {
-                    loadPath: assetsPath + "json/locales/{{lng}}.json"
-                },
-                returnObjects: !0
-            }).then(function(e) {
-                r()
             });
 
             var i = document.getElementsByClassName("dropdown-language");
