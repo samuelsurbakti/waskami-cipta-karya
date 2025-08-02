@@ -41,18 +41,26 @@ new class extends Component {
 			<h5 class="mb-0 card-title">{{ $worker->name }}</h5>
 			<span>{{ Str::title($worker->type->name) }}</span>
 			<ul class="list-unstyled mt-3 mb-0 py-1">
-                <li class="d-flex mb-4">
-                    <span class="fw-medium mx-2">No. Telepon:</span>
-                    <span class="text-start"><a href="tel:{{ $worker->phone }}" target="_blank">{{ $worker->phone }}</a></span>
-                </li>
-                <li class="d-flex mb-4">
-                    <span class="fw-medium mx-2">No. Whatsapp:</span>
-                    <span class="text-start"><a href="https://wa.me/{{ Str::startsWith($worker->phone, '0') ? '62' . substr($worker->phone, 1) : $worker->phone }}" target="_blank">{{ $worker->whatsapp }}</a></span>
-                </li>
-                <li class="d-flex mb-4">
-                    <span class="fw-medium mx-2">Alamat:</span>
-                    <span class="text-start">{{ $worker->address }}</span>
-                </li>
+                @if ($worker->phone)
+                    <li class="d-flex mb-4">
+                        <span class="fw-medium mx-2">No. Telepon:</span>
+                        <span class="text-start"><a href="tel:{{ $worker->phone }}" target="_blank">{{ $worker->phone }}</a></span>
+                    </li>
+                @endif
+
+                @if ($worker->phone)
+                    <li class="d-flex mb-4">
+                        <span class="fw-medium mx-2">No. Whatsapp:</span>
+                        <span class="text-start"><a href="https://wa.me/{{ Str::startsWith($worker->phone, '0') ? '62' . substr($worker->phone, 1) : $worker->phone }}" target="_blank">{{ $worker->whatsapp }}</a></span>
+                    </li>
+                @endif
+
+                @if ($worker->address)
+                    <li class="d-flex mb-4">
+                        <span class="fw-medium mx-2">Alamat:</span>
+                        <span class="text-start">{{ $worker->address }}</span>
+                    </li>
+                @endif
             </ul>
 			{{-- <div class="d-flex align-items-center justify-content-around mb-8">
 				<div>

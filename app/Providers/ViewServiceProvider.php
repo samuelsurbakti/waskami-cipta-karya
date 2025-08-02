@@ -23,8 +23,9 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer(['ui.layouts.vertical', 'ui.layouts.horizontal'], function ($view) {
+        View::composer('*', function ($view) {
             $subdomain = Request::getHost();
+            $currentPath = Request::segment(1);
 
             // Ambil App berdasarkan subdomain
             $app = App::where('subdomain', $subdomain)->first();
@@ -47,7 +48,7 @@ class ViewServiceProvider extends ServiceProvider
 
                 // Coba cocokkan menu aktif berdasarkan URL
                 $active = $app->menus()
-                    ->where('url', Request::path())
+                    ->where('url', $currentPath)
                     ->first();
 
                 if ($active) {

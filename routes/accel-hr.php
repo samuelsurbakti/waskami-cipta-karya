@@ -21,5 +21,9 @@ Route::domain('hr.waskamirealty.online')->group(function () {
                 Volt::route('', 'accel-hr.worker.show')->name('AccelHr | Worker | Show');
             });
         });
+
+        Route::group(['middleware' => ['permission:AccelHr - Presensi'], 'prefix' => 'attendance'], function () {
+            Volt::route('', 'accel-hr.attendance.index')->name('AccelHr | Attendance');
+        });
     });
 });

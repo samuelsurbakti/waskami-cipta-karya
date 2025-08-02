@@ -41,7 +41,8 @@
         },
         "files": [
             "app/Helpers/TableHelper.php",
-            "app/Helpers/StringHelper.php"
+            "app/Helpers/StringHelper.php",
+            "app/Helpers/BreadcrumbHelper.php"
         ]
     },
     "autoload-dev": {
