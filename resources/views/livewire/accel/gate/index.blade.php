@@ -9,7 +9,7 @@ new #[Layout('ui.layouts.horizontal')] class extends Component {
 
     public function mount()
     {
-        $this->apps = App::orderBy('order_number')->get();
+        $this->apps = App::where('name', '!=', 'Accel')->orderBy('order_number')->get();
     }
 }; ?>
 
