@@ -7,7 +7,7 @@
 ])
 ->class([
     'mb-4 px-4 md:p-0' => $isTailwind,
-    'mb-3 d-flex gap-2 px-6' => $isBootstrap,
+    'my-5 d-flex gap-2 px-6' => $isBootstrap,
 ])
 
 }}>
