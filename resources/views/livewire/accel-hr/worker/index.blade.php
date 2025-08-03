@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\Hr\Worker;
+use App\Helpers\PageHelper;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
-use App\Helpers\BreadcrumbHelper;
 
 new #[Layout('ui.layouts.vertical')] class extends Component {
     public $workers;
@@ -45,7 +45,7 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 @endpush
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <x-ui::elements.page-header :breadcrumbs="BreadcrumbHelper::generate_breadcrumbs([null])" />
+    <x-ui::elements.page-header :info="PageHelper::info()" />
 
     <div class="row">
         <div class="col-sm-12 col-md-4 col-lg-4">

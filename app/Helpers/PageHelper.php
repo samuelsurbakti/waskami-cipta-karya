@@ -8,9 +8,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
-class BreadcrumbHelper
+class PageHelper
 {
-    public static function generate_breadcrumbs($params = '')
+    public static function info($params = '')
     {
         // Ambil nama route aktif
         $routeName = Route::currentRouteName();
@@ -84,6 +84,10 @@ class BreadcrumbHelper
             ];
         }
 
-        return $breadcrumbs;
+        return [
+            'breadcrumbs' => $breadcrumbs,
+            'page_icon' => $menu->icon,
+            'page_title' => $menu->title
+        ];
     }
 }

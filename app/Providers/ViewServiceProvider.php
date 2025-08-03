@@ -23,7 +23,7 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('*', function ($view) {
+        View::composer(['ui.elements.button', 'ui.layouts.vertical', 'ui.layouts.horizontal'], function ($view) {
             $subdomain = Request::getHost();
             $currentPath = Request::segment(1);
 

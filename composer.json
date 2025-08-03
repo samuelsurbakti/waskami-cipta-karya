@@ -42,7 +42,7 @@
         "files": [
             "app/Helpers/TableHelper.php",
             "app/Helpers/StringHelper.php",
-            "app/Helpers/BreadcrumbHelper.php"
+            "app/Helpers/PageHelper.php"
         ]
     },
     "autoload-dev": {
