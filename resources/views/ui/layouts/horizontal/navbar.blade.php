@@ -58,90 +58,43 @@
                 </li>
                 <!-- / Style Switcher-->
                 <!-- Quick links  -->
-                <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
+                <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-3 me-xl-2">
                     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                         <i class="icon-base bx bx-grid-alt icon-md"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end p-0">
                         <div class="dropdown-menu-header border-bottom">
                             <div class="dropdown-header d-flex align-items-center py-3">
-                                <h6 class="mb-0 me-auto">Shortcuts</h6>
-                                <a href="javascript:void(0)" class="dropdown-shortcuts-add py-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Add shortcuts">
-                                    <i class="icon-base bx bx-plus-circle text-heading"></i>
-                                </a>
+                                <h6 class="mb-0 me-auto">Akses Aplikasi Lain</h6>
                             </div>
                         </div>
                         <div class="dropdown-shortcuts-list scrollable-container">
-                            <div class="row row-bordered overflow-visible g-0">
-                                <div class="dropdown-shortcuts-item col">
-                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                        <i class="icon-base bx bx-calendar icon-26px text-heading"></i>
-                                    </span>
-                                    <a href="app-calendar.html" class="stretched-link">Calendar</a>
-                                    <small>Appointments</small>
+                            @if ($app_list->count() == 0)
+                                <div class="row row-bordered overflow-visible g-0 py-3 px-3">
+                                    Maaf, {{ auth()->user()->name }}, Sepertinya tidak ada aplikasi lain yang tersedia untukmu saat ini.
                                 </div>
-                                <div class="dropdown-shortcuts-item col">
-                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                        <i class="icon-base bx bx-food-menu icon-26px text-heading"></i>
-                                    </span>
-                                    <a href="app-invoice-list.html" class="stretched-link">Invoice App</a>
-                                    <small>Manage Accounts</small>
-                                </div>
-                            </div>
-                            <div class="row row-bordered overflow-visible g-0">
-                                <div class="dropdown-shortcuts-item col">
-                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                        <i class="icon-base bx bx-user icon-26px text-heading"></i>
-                                    </span>
-                                    <a href="app-user-list.html" class="stretched-link">User App</a>
-                                    <small>Manage Users</small>
-                                </div>
-                                <div class="dropdown-shortcuts-item col">
-                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                        <i class="icon-base bx bx-check-shield icon-26px text-heading"></i>
-                                    </span>
-                                    <a href="app-access-roles.html" class="stretched-link">Role Management</a>
-                                    <small>Permission</small>
-                                </div>
-                            </div>
-                            <div class="row row-bordered overflow-visible g-0">
-                                <div class="dropdown-shortcuts-item col">
-                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                        <i class="icon-base bx bx-pie-chart-alt-2 icon-26px text-heading"></i>
-                                    </span>
-                                    <a href="index-2.html" class="stretched-link">Dashboard</a>
-                                    <small>User Dashboard</small>
-                                </div>
-                                <div class="dropdown-shortcuts-item col">
-                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                        <i class="icon-base bx bx-cog icon-26px text-heading"></i>
-                                    </span>
-                                    <a href="pages-account-settings-account.html" class="stretched-link">Setting</a>
-                                    <small>Account Settings</small>
-                                </div>
-                            </div>
-                            <div class="row row-bordered overflow-visible g-0">
-                                <div class="dropdown-shortcuts-item col">
-                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                        <i class="icon-base bx bx-help-circle icon-26px text-heading"></i>
-                                    </span>
-                                    <a href="pages-faq.html" class="stretched-link">FAQs</a>
-                                    <small>FAQs & Articles</small>
-                                </div>
-                                <div class="dropdown-shortcuts-item col">
-                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                                        <i class="icon-base bx bx-window-open icon-26px text-heading"></i>
-                                    </span>
-                                    <a href="modal-examples.html" class="stretched-link">Modals</a>
-                                    <small>Useful Popups</small>
-                                </div>
-                            </div>
+                            @else
+                                @foreach ($app_list as $app)
+                                    @if ($loop->first or $loop->odd)
+                                        <div class="row row-bordered overflow-visible g-0">
+                                    @endif
+
+                                    <div class="dropdown-shortcuts-item col">
+                                        <img src="/src/assets/illustrations/app/{{ $app->image }}.svg" height="100" class="rounded-start" alt="{{ $app->name }} Image" />
+                                        <a href="https://{{ $app->subdomain }}" class="stretched-link optional_new_tab">{{ $app->name }}</a>
+                                    </div>
+
+                                    @if ($loop->last or $loop->even)
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </li>
                 <!-- Quick links -->
                 <!-- Notification -->
-                <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
+                {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
                     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                         <span class="position-relative">
                             <i class="icon-base bx bx-bell icon-md"></i>
@@ -376,7 +329,7 @@
                             </div>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 <!--/ Notification -->
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">

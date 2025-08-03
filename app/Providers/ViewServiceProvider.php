@@ -31,6 +31,7 @@ class ViewServiceProvider extends ServiceProvider
             $app = App::where('subdomain', $subdomain)->first();
 
             $menus = [];
+            $app_list = [];
             $page_title = null;
             $page_icon = null;
 
@@ -46,6 +47,11 @@ class ViewServiceProvider extends ServiceProvider
                     ->whereNull('parent')
                     ->get();
 
+                $app_list = App::where('subdomain', '!=', $subdomain)
+                    ->whereHas('app_permission.roles', function($query) use ($roleId) {
+                        $query->where('uuid', $roleId);
+                    })->get();
+
                 // Coba cocokkan menu aktif berdasarkan URL
                 $active = $app->menus()
                     ->where('url', $currentPath)
@@ -59,6 +65,7 @@ class ViewServiceProvider extends ServiceProvider
 
             $view->with([
                 'app' => $app,
+                'app_list' => $app_list,
                 'menus' => $menus,
                 'page_title' => $page_title ?? 'Tidak Diketahui',
                 'page_icon' => $page_icon ?? 'bx bx-question-mark',

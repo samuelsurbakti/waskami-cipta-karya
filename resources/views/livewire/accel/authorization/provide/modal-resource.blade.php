@@ -143,7 +143,7 @@ new class extends Component {
                                     </div>
                                     <div class="col-3 d-flex justify-content-end">
                                         <label class="switch switch-square me-0">
-                                            <input id="app_{{ $app->id }}" wire:click="'app_switch('{{ $app->id }}')" type="checkbox" class="switch-input" {{ ($role->hasPermissionTo($app->app_permission->name) ? 'checked' : '') }}>
+                                            <input id="app_{{ $app->id }}" wire:click="app_switch('{{ $app->id }}')" type="checkbox" class="switch-input" {{ ($role->hasPermissionTo($app->app_permission->name) ? 'checked' : '') }}>
                                             <span class="switch-toggle-slider">
                                                 <span class="switch-on">
                                                     <i class="icon-base bx bx-check"></i>
