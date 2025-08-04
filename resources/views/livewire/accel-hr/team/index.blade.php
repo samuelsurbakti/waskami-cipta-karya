@@ -62,12 +62,16 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
                     </div>
                 </div>
             @endcan
-
-            @can('AccelHr - Tim - Melihat Daftar Data')
-                @foreach($teams as $team)
-                    <livewire:accel-hr.team.item :$team :key="$team->id" />
-                @endforeach
-            @endcan
         </div>
+
+        @can('AccelHr - Tim - Melihat Daftar Data')
+            @foreach($teams as $team)
+                <livewire:accel-hr.team.item :$team :key="$team->id" />
+            @endforeach
+        @endcan
     </div>
+
+    @canany(['AccelHr - Tim - Menambah Data', 'AccelHr - Tim - Mengubah Data', 'AccelHr - Tim - Menghapus Data'])
+        <livewire:accel-hr.team.modal-resource />
+    @endcanany
 </div>

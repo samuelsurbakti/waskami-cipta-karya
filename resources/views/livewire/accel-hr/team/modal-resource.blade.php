@@ -6,6 +6,7 @@ use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use App\Models\Hr\Team\Member;
 use Livewire\Attributes\Validate;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 new class extends Component {
     public $options_worker = [];
@@ -149,44 +150,65 @@ new class extends Component {
         wire:model.live="team_name"
         type="text"
         label="Nama"
-        placeholder="Bowo Cokro Aminoto"
+        placeholder="Tim Trobos"
         container_class="col-12 mb-6"
     />
 
     <x-ui::forms.select
-        wire-model="team_type_id"
-        label="Jenis"
-        placeholder="Pilih Jenis Tim"
+        wire-model="team_member"
+        label="Anggota"
+        placeholder="Pilih Anggota Tim"
         container-class="col-12 mb-6"
         init-select2-class="select2_team"
-        :options="$options_type"
+        :options="$options_worker"
         value-field="id"
         text-field="name"
         multiple
     />
-
-
-
-    <x-ui::forms.input
-        wire:model.live="team_phone"
-        type="text"
-        label="No. Telepon"
-        placeholder="081199552244"
-        container_class="col-12 mb-6"
-    />
-
-    <x-ui::forms.input
-        wire:model.live="team_whatsapp"
-        type="text"
-        label="No. Whatsapp"
-        placeholder="081199552244"
-        container_class="col-12 mb-6"
-    />
-
-    <x-ui::forms.textarea
-        wire:model.live="team_address"
-        label="Alamat"
-        placeholder="Jl. Bunga Sedap Malam IX No.1, Sempakata, Kec. Medan Selayang, Kota Medan, Sumatera Utara 20131"
-        container_class="col-12 mb-6"
-    />
 </x-ui::elements.modal-form>
+
+@script
+    <script>
+        Livewire.on('close_modal_team_resource', () => {
+            var modalElement = document.getElementById('modal_team_resource');
+            var modal = bootstrap.Modal.getInstance(modalElement)
+            modal.hide();
+        });
+
+        function initSelect2() {
+            var e_select2 = $(".select2_team");
+            e_select2.length && e_select2.each(function () {
+                var e_select2 = $(this);
+                e_select2.wrap('<div class="position-relative"></div>').select2({
+                    placeholder: "Select value",
+                    allowClear: true,
+                    dropdownParent: e_select2.parent()
+                })
+            })
+        }
+
+        $(document).ready(function () {
+            initSelect2();
+
+            $(document).on('change', '.select2_team', function () {
+                $wire.set_team_field($(this).attr('id'), $(this).val());
+            });
+
+            $(document).on('click', '#btn_team_add', function () {
+                $wire.reset_team();
+            });
+
+            $(document).on('click', '.btn_team_edit', function () {
+                $wire.set_team($(this).attr('value'));
+            });
+
+            $(document).on('click', '.btn_team_delete', function () {
+                $wire.ask_to_delete_team($(this).attr('value'));
+            });
+
+            window.Livewire.on('re_init_select2', () => {
+                setTimeout(initSelect2, 0)
+            })
+        });
+    </script>
+@endscript

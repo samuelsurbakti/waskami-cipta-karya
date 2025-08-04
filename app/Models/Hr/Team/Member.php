@@ -14,7 +14,7 @@ class Member extends Model
 {
     use HasUuids, LogsActivity, SoftDeletes;
 
-    protected $table = 'hr_teams';
+    protected $table = 'hr_team_members';
     protected $fillable = ['team_id', 'worker_id'];
 
     public function getActivitylogOptions(): LogOptions

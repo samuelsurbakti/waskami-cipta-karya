@@ -11,7 +11,12 @@
         <div class="modal-content">
             {{-- Loading states --}}
             @foreach ($loadingTargets as $target)
-                <x-ui::elements.loading text="Mengambil Data" target="{{ $target }}" />
+                @if ($target == 'save')
+                    <x-ui::elements.loading text="Menyimpan Data" target="{{ $target }}" />
+                @else
+                    <x-ui::elements.loading text="Mengambil Data" target="{{ $target }}" />
+                @endif
+
             @endforeach
 
             {{-- Header --}}
