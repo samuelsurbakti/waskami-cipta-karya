@@ -4,5 +4,5 @@
 ])
 
 <h5 class="fw-bold d-flex align-items-center gap-2">
-    <i class="{{ $pageIcon }}"></i> {{ $pageTitle }}
+    <i class="{{ $pageIcon }} fs-4"></i> {{ $pageTitle }}
 </h5>
