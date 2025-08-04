@@ -145,59 +145,48 @@ new class extends Component {
     :description="'Di sini, Anda dapat ' . (is_null($worker_id) ? 'menambah data' : 'mengubah informasi') . ' pekerja.'"
     :loading-targets="['set_worker', 'reset_worker', 'save']"
 >
-    <form wire:submit="save" method="POST">
-        @csrf
-        <x-ui::forms.select
-            wire-model="worker_type_id"
-            label="Jenis"
-            placeholder="Pilih Jenis Pekerja"
-            container-class="col-12 mb-6"
-            init-select2-class="select2_worker"
-            :options="$options_type"
-            value-field="id"
-            text-field="name"
-        />
+    @csrf
+    <x-ui::forms.select
+        wire-model="worker_type_id"
+        label="Jenis"
+        placeholder="Pilih Jenis Pekerja"
+        container-class="col-12 mb-6"
+        init-select2-class="select2_worker"
+        :options="$options_type"
+        value-field="id"
+        text-field="name"
+    />
 
-        <x-ui::forms.input
-            wire:model.live="worker_name"
-            type="text"
-            label="Nama"
-            placeholder="Bowo Cokro Aminoto"
-            container_class="col-12 mb-6"
-        />
+    <x-ui::forms.input
+        wire:model.live="worker_name"
+        type="text"
+        label="Nama"
+        placeholder="Bowo Cokro Aminoto"
+        container_class="col-12 mb-6"
+    />
 
-        <x-ui::forms.input
-            wire:model.live="worker_phone"
-            type="text"
-            label="No. Telepon"
-            placeholder="081199552244"
-            container_class="col-12 mb-6"
-        />
+    <x-ui::forms.input
+        wire:model.live="worker_phone"
+        type="text"
+        label="No. Telepon"
+        placeholder="081199552244"
+        container_class="col-12 mb-6"
+    />
 
-        <x-ui::forms.input
-            wire:model.live="worker_whatsapp"
-            type="text"
-            label="No. Whatsapp"
-            placeholder="081199552244"
-            container_class="col-12 mb-6"
-        />
+    <x-ui::forms.input
+        wire:model.live="worker_whatsapp"
+        type="text"
+        label="No. Whatsapp"
+        placeholder="081199552244"
+        container_class="col-12 mb-6"
+    />
 
-        <x-ui::forms.textarea
-            wire:model.live="worker_address"
-            label="Alamat"
-            placeholder="Jl. Bunga Sedap Malam IX No.1, Sempakata, Kec. Medan Selayang, Kota Medan, Sumatera Utara 20131"
-            container_class="col-12 mb-6"
-        />
-
-        <div class="col-12 text-center mt-8">
-            <x-ui::elements.button type="submit" class="btn-primary me-sm-3 me-1">
-                Simpan
-            </x-ui::elements.button>
-            <x-ui::elements.button type="reset" class="btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
-                Batalkan
-            </x-ui::elements.button>
-        </div>
-    </form>
+    <x-ui::forms.textarea
+        wire:model.live="worker_address"
+        label="Alamat"
+        placeholder="Jl. Bunga Sedap Malam IX No.1, Sempakata, Kec. Medan Selayang, Kota Medan, Sumatera Utara 20131"
+        container_class="col-12 mb-6"
+    />
 </x-ui::elements.modal-form>
 
 @script

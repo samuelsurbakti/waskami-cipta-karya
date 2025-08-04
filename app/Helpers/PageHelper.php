@@ -86,8 +86,8 @@ class PageHelper
 
         return [
             'breadcrumbs' => $breadcrumbs,
-            'page_icon' => $menu->icon,
-            'page_title' => $menu->title
+            'page_icon'   => $menu->icon ?? 'bx bx-question-mark',
+            'page_title'  => $menu->title ?? 'Tidak Diketahui',
         ];
     }
 }

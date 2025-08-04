@@ -22,6 +22,14 @@ Route::domain('hr.waskamirealty.online')->group(function () {
             });
         });
 
+        Route::group(['middleware' => ['permission:AccelHr - Tim'], 'prefix' => 'team'], function () {
+            Volt::route('', 'accel-hr.team.index')->name('AccelHr | Team');
+
+            Route::group(['middleware' => ['permission:AccelHr - Tim - Melihat Data'], 'prefix' => '{id}'], function () {
+                Volt::route('', 'accel-hr.team.show')->name('AccelHr | Team | Show');
+            });
+        });
+
         Route::group(['middleware' => ['permission:AccelHr - Presensi'], 'prefix' => 'attendance'], function () {
             Volt::route('', 'accel-hr.attendance.index')->name('AccelHr | Attendance');
         });

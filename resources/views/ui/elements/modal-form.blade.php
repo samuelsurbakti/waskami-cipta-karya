@@ -28,8 +28,19 @@
                     @endif
                 </div>
 
+                <form wire:submit="save" method="POST">
                 {{-- Konten/form disediakan oleh slot --}}
-                {{ $slot }}
+                    {{ $slot }}
+
+                    <div class="col-12 text-center mt-8">
+                        <x-ui::elements.button type="submit" class="btn-primary me-sm-3 me-1">
+                            Simpan
+                        </x-ui::elements.button>
+                        <x-ui::elements.button type="reset" class="btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                            Batalkan
+                        </x-ui::elements.button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
