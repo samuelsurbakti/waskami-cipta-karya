@@ -220,16 +220,6 @@ new class extends Component {
             })
         }
 
-        document.addEventListener('livewire:load', () => {
-            Livewire.hook('message.processed', () => {
-                let grid = document.querySelector('[data-masonry]');
-                if (grid) {
-                    // Re-init Masonry (dengan asumsi kamu pakai Masonry v4)
-                    new Masonry(grid, JSON.parse(grid.dataset.masonry || '{}'));
-                }
-            });
-        });
-
         $(document).ready(function () {
             initSelect2();
 
