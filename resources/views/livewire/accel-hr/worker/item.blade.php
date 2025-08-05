@@ -30,6 +30,7 @@ new class extends Component {
                     ]"
                     edit-class="btn_worker_edit"
                     delete-class="btn_worker_delete"
+                    variant="pinned"
                 />
             @endcanany
 

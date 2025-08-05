@@ -2,6 +2,7 @@
 
 use App\Models\Hr\Team;
 use App\Helpers\PageHelper;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
@@ -44,12 +45,14 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 @endpush
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <x-ui::elements.page-header :info="PageHelper::info()" />
+    <div wire:ignore>
+        <x-ui::elements.page-header :info="PageHelper::info()" />
+    </div>
 
-    <div class="row g-6">
+    <div class="row g-6" data-masonry='{"percentPosition": true }'>
         <div class="col-xs-12 col-md-6 col-lg-4">
             @can('AccelHr - Tim - Menambah Data')
-                <div class="card text-center mb-6 border-top">
+                <div class="card text-center border-top">
                     <div class="card-body">
                         <h5 class="card-title">Tim Baru</h5>
                         <div class="d-flex align-items-end justify-content-center mt-sm-0 mt-3">
@@ -75,3 +78,20 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
         <livewire:accel-hr.team.modal-resource />
     @endcanany
 </div>
+
+@script
+    <script>
+        $(document).ready(function () {
+            function initMasonry() {
+                let grid = document.querySelector('[data-masonry]');
+                if (grid) {
+                    new Masonry(grid, JSON.parse(grid.dataset.masonry || '{}'));
+                }
+            }
+
+            window.Livewire.on('re_init_masonry', () => {
+                setTimeout(initMasonry, 0)
+            })
+        });
+    </script>
+@endscript

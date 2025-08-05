@@ -100,7 +100,6 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
             function initMasonry() {
                 let grid = document.querySelector('[data-masonry]');
                 if (grid) {
-                    // Re-init Masonry (dengan asumsi kamu pakai Masonry v4)
                     new Masonry(grid, JSON.parse(grid.dataset.masonry || '{}'));
                 }
             }

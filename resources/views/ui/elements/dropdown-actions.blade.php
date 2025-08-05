@@ -5,12 +5,22 @@
     'permissions' => [],
     'editClass' => 'btn_edit',
     'deleteClass' => 'btn_delete',
+    'variant' => 'pinned', // 'pinned' (code 1) atau 'action' (code 2)
 ])
 
-<div class="dropdown btn-pinned">
-    <button type="button" class="btn btn-icon btn-text-secondary rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+@php
+    $wrapperClass = $variant === 'action' ? 'card-action-element' : 'btn-pinned';
+    $buttonExtraClass = $variant === 'action' ? 'p-0 text-body-secondary' : '';
+@endphp
+
+<div class="dropdown {{ $wrapperClass }}">
+    <button type="button"
+        class="btn btn-icon btn-text-secondary rounded-pill dropdown-toggle hide-arrow {{ $buttonExtraClass }}"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
         <i class="icon-base bx bx-dots-vertical-rounded icon-md text-body-secondary"></i>
     </button>
+
     <ul class="dropdown-menu dropdown-menu-end">
         {{-- Tombol Lihat --}}
         @if(isset($permissions['view']) && Gate::check($permissions['view']))
@@ -44,5 +54,8 @@
                 </button>
             </li>
         @endif
+
+        {{-- Slot untuk action custom tambahan --}}
+        {{ $slot }}
     </ul>
 </div>
