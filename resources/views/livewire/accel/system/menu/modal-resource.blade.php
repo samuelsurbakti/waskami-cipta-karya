@@ -37,6 +37,7 @@ new class extends Component {
     public function reset_menu()
     {
         $this->reset(['menu_id', 'menu_app_id', 'menu_title', 'menu_icon', 'menu_url', 'menu_order_number', 'menu_parent', 'menu_member_of', 'menus']);
+        $this->resetValidation();
     }
 
     public function hydrate()

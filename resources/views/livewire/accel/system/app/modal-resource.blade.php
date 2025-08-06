@@ -22,6 +22,7 @@ new class extends Component {
     public function reset_app()
     {
         $this->reset(['app_id', 'app_name', 'app_subdomain', 'app_order_number']);
+        $this->resetValidation();
     }
 
     #[On('set_app')]

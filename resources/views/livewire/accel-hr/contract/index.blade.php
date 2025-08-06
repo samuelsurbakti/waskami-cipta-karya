@@ -17,6 +17,9 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 
     {{-- Select2 --}}
     <link rel="stylesheet" href="/themes/vendor/libs/select2/select2.css" />
+
+    {{-- Boostrap Datepicker --}}
+    <link rel="stylesheet" href="/themes/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css">
 @endpush
 
 @push('page_scripts')
@@ -25,6 +28,9 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 
     {{-- Select2 --}}
     <script src="/themes/vendor/libs/select2/select2.js"></script>
+
+    {{-- Bootstrap Datepicker --}}
+    <script src="/themes/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js"></script>
 
     {{-- Masonry --}}
     <script src="/themes/vendor/libs/masonry/masonry.js"></script>

@@ -22,9 +22,10 @@ new class extends Component {
     }
 
     #[On('reset_role')]
-    public function resetRole()
+    public function reset_role()
     {
         $this->reset(['role_id', 'role_name']);
+        $this->resetValidation();
     }
 
     public function save()
@@ -54,7 +55,7 @@ new class extends Component {
             ->position('bottom-end')
             ->show();
 
-        $this->reset(['role_id', 'role_name']);
+        $this->reset_role();
     }
 }; ?>
 

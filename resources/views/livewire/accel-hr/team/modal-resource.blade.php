@@ -147,7 +147,7 @@ new class extends Component {
 >
     @csrf
     <x-ui::forms.input
-        wire:model.live="team_name"
+        wire:model="team_name"
         type="text"
         label="Nama"
         placeholder="Tim Trobos"

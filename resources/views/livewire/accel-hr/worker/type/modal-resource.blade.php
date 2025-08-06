@@ -24,6 +24,7 @@ new class extends Component {
     public function reset_type()
     {
         $this->reset(['type_id', 'type_name']);
+        $this->resetValidation();
     }
 
     public function save()
@@ -49,7 +50,7 @@ new class extends Component {
             ->position('bottom-end')
             ->show();
 
-        $this->reset(['type_id', 'type_name']);
+        $this->reset_type();
     }
 
     #[On('ask_to_delete_type')]
