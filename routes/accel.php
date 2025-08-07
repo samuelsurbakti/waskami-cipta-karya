@@ -10,7 +10,7 @@ Route::domain('accel.waskamirealty.online')->group(function () {
         return redirect(route('Accel | Gate'));
     });
 
-    Route::group(['middleware' => ['auth']], function () {
+    Route::group(['middleware' => ['auth', 'log_page_view']], function () {
         Volt::route('gate', 'accel.gate.index')->name('Accel | Gate');
 
         Volt::route('account', 'accel.account.index')->name('Accel | Account');
