@@ -2,9 +2,11 @@
 
 use App\Models\Hr\Team;
 use App\Models\Hr\Worker;
+use App\Models\Hr\Contract;
 use Livewire\Volt\Component;
 use App\Models\Hr\Contract\Type;
 use Livewire\Attributes\Validate;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 new class extends Component {
     public $options_type = [], $options_relation;
@@ -32,9 +34,19 @@ new class extends Component {
     #[Validate('required', as: 'Tgl. Mulai')]
     public $contract_start_date;
 
-    public function set_contract()
+    public function set_contract($contract_id)
     {
+        $this->contract_id = $contract_id;
 
+        $contract = Contract::findOrFail($this->contract_id);
+
+        $this->contract_title = $contract->title;
+        $this->set_contract_field('contract_type_id', $contract->type_id);
+        $this->contract_relation_type = $contract->relation_type;
+        $this->contract_relation_id = $contract->relation_id;
+        $this->contract_project_id = $contract->project_id;
+        $this->contract_rates = $contract->rates;
+        $this->contract_start_date = $contract->start_date;
     }
 
     public function reset_contract()
@@ -68,6 +80,78 @@ new class extends Component {
     public function save()
     {
         $this->validate();
+
+        if(is_null($this->contract_id)) {
+            $contract = Contract::create([
+                'title' => $this->contract_title,
+                'relation_type' => $this->contract_relation_type,
+                'relation_id' => $this->contract_relation_id,
+                'project_id' => $this->contract_project_id,
+                'type_id' => $this->contract_type_id,
+                'rates' => $this->contract_rates,
+                'start_date' => $this->contract_start_date,
+            ]);
+
+            $this->dispatch("re_render_contracts_container");
+        } else {
+            $contract = Contract::findOrFail($this->contract_id);
+
+            $contract->update([
+                'title' => $this->contract_title,
+                'relation_type' => $this->contract_relation_type,
+                'relation_id' => $this->contract_relation_id,
+                'project_id' => $this->contract_project_id,
+                'type_id' => $this->contract_type_id,
+                'rates' => $this->contract_rates,
+                'start_date' => $this->contract_start_date,
+            ]);
+
+            $this->dispatch("refresh_contract_component.{$contract->id}");
+        }
+
+        $this->dispatch('close_modal_contract_resource');
+
+        LivewireAlert::title('')
+            ->text('Berhasil ' . (is_null($this->contract_id) ? 'menambah' : 'mengubah') . ' kontrak')
+            ->success()
+            ->toast()
+            ->position('bottom-end')
+            ->show();
+
+        $this->reset_contract();
+    }
+
+    public function ask_to_delete_contract($contract_id)
+    {
+        $this->contract_id = $contract_id;
+        $contract = Contract::find($this->contract_id);
+        LivewireAlert::title('Peringatan')
+            ->text('Perintah ini akan menghapus kontrak kerja dengan judul '.$contract->title.', Anda yakin ingin melanjutkan?')
+            ->asConfirm()
+            ->withConfirmButton('Lanjutkan')
+            ->withDenyButton('Batalkan')
+            ->onConfirm('delete_contract')
+            ->show();
+    }
+
+    public function delete_contract()
+    {
+        $contract = Contract::find($this->contract_id);
+
+        if($contract) {
+            $contract->delete();
+
+            $this->dispatch("re_render_contracts_container");
+
+            LivewireAlert::title('')
+            ->text('Berhasil menghapus kontrak kerja')
+            ->success()
+            ->toast()
+            ->position('bottom-end')
+            ->show();
+
+            $this->reset_contract();
+        }
     }
 
     public function mount()
@@ -165,7 +249,7 @@ new class extends Component {
             initSelect2();
             init_bootstrap_datepicker();
 
-            $(document).on('change', '.select2_contract', function () {
+            $(document).on('change', '.select2_contract, #contract_start_date', function () {
                 $wire.set_contract_field($(this).attr('id'), $(this).val());
             });
 

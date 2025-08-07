@@ -1,11 +1,25 @@
 <?php
 
 use App\Helpers\PageHelper;
+use App\Models\Hr\Contract;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
 new #[Layout('ui.layouts.vertical')] class extends Component {
+    public $contracts;
 
+    public function mount()
+    {
+        $this->contracts = Contract::orderByDesc('start_date')->get();
+    }
+
+    #[On('re_render_contracts_container')]
+    public function re_render_contracts_container()
+    {
+        $this->mount();
+        $this->dispatch('re_init_masonry');
+    }
 }; ?>
 
 @push('page_styles')
@@ -81,7 +95,28 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
         <livewire:accel-hr.contract.modal-resource />
     @endcanany
 
+    @can('AccelHr - Kontrak - Mengubah Data')
+        <livewire:accel-hr.contract.modal-closing />
+    @endcan
+
     @canany(['AccelHr - Kontrak - Jenis - Menambah Data', 'AccelHr - Kontrak - Jenis - Mengubah Data', 'AccelHr - Kontrak - Jenis - Menghapus Data'])
         <livewire:accel-hr.contract.type.modal-resource />
     @endcanany
 </div>
+
+@script
+    <script>
+        $(document).ready(function () {
+            function initMasonry() {
+                let grid = document.querySelector('[data-masonry]');
+                if (grid) {
+                    new Masonry(grid, JSON.parse(grid.dataset.masonry || '{}'));
+                }
+            }
+
+            window.Livewire.on('re_init_masonry', () => {
+                setTimeout(initMasonry, 0)
+            })
+        });
+    </script>
+@endscript

@@ -40,7 +40,7 @@ class ViewServiceProvider extends ServiceProvider
                 $roleId = Auth::user()->getRoleIds()->first();
 
                 // Ambil menu yang bisa diakses user
-                $menus = $app->menus()
+                $menus = $app->menus()->with(['get_child', 'app'])
                     ->whereHas('menu_permission.roles', function ($query) use ($roleId) {
                         $query->where('uuid', $roleId);
                     })

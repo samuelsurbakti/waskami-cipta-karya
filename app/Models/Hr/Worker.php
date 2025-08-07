@@ -2,6 +2,7 @@
 
 namespace App\Models\Hr;
 
+use App\Models\Hr\Contract;
 use App\Models\Hr\Worker\Type;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
@@ -29,5 +30,10 @@ class Worker extends Model
     public function type()
     {
         return $this->belongsTo(Type::class, 'type_id');
+    }
+
+    public function contracts()
+    {
+        return $this->morphMany(Contract::class, 'relation');
     }
 }
