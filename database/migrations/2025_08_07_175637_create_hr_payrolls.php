@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hr_attendances', function (Blueprint $table) {
+        Schema::create('hr_payrolls', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('contract_id')->constrained('hr_contracts')->cascadeOnDelete();
-            $table->date('date');
-            $table->time('start_time');
-            $table->string('start_photo');
-            $table->time('end_time')->nullable();
-            $table->string('end_photo')->nullable();
-            $table->decimal('overtime_rates', 15, 2)->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->decimal('total_salary', 15, 2);
+            $table->enum('status', ['draft', 'final'])->default('draft');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hr_attendances');
+        Schema::dropIfExists('hr_payrolls');
     }
 };

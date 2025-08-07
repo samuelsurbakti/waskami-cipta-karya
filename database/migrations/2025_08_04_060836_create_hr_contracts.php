@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignUuid('type_id');
 
             $table->decimal('rates', 15, 2);
+            $table->enum('pay_cycle', ['weekly', 'monthly'])->default('weekly');
 
             $table->date('start_date');
             $table->date('end_date')->nullable();
