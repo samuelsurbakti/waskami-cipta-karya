@@ -1,11 +1,26 @@
 <?php
 
+use Carbon\Carbon;
 use App\Helpers\PageHelper;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
+use App\Models\Hr\Attendance;
 use Livewire\Attributes\Layout;
 
 new #[Layout('ui.layouts.vertical')] class extends Component {
-    //
+    public $attendances;
+
+    public function mount()
+    {
+        $this->attendances = Attendance::where('date', Carbon::now()->toDateString())->get();
+    }
+
+    #[On('re_render_attendances_container')]
+    public function re_render_attendances_container()
+    {
+        $this->mount();
+        $this->dispatch('re_init_masonry');
+    }
 }; ?>
 
 @push('page_styles')
@@ -66,7 +81,7 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
                             <img src="/src/assets/illustrations/add-attendance.svg" class="img-fluid me-n3" alt="Image" width="120px">
                         </div>
                         <p class="card-text">Lupa check in? Tenang data presensi bisa kamu tambahkan melalui tombol di bawah ini!</p>
-                        <button type="button" class="btn btn-primary" id="btn_attendance_check_in" data-bs-target="#modal_attendance_resource" data-bs-toggle="modal">
+                        <button type="button" class="btn btn-primary" id="btn_attendance_add" data-bs-target="#modal_attendance_resource" data-bs-toggle="modal">
                             <span class="icon-base bx bx-plus icon-xs me-2"></span>Tambahkan
                         </button>
                     </div>
@@ -76,7 +91,11 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 
         <div class="col-sm-12 col-md-8 col-lg-8">
             <div class="row g-6" data-masonry='{"percentPosition": true }'>
-
+                @can('AccelHr - Presensi - Melihat Daftar Data')
+                    @foreach($attendances as $attendance)
+                        <livewire:accel-hr.attendance.item :$attendance :key="$attendance->id" />
+                    @endforeach
+                @endcan
             </div>
         </div>
     </div>
@@ -84,4 +103,25 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
     @can('AccelHr - Presensi - Check In')
         <livewire:accel-hr.attendance.modal-check-in />
     @endcan
+
+    @can('AccelHr - Presensi - Check Out')
+        <livewire:accel-hr.attendance.modal-check-out />
+    @endcan
 </div>
+
+@script
+    <script>
+        $(document).ready(function () {
+            function initMasonry() {
+                let grid = document.querySelector('[data-masonry]');
+                if (grid) {
+                    new Masonry(grid, JSON.parse(grid.dataset.masonry || '{}'));
+                }
+            }
+
+            window.Livewire.on('re_init_masonry', () => {
+                setTimeout(initMasonry, 0)
+            })
+        });
+    </script>
+@endscript

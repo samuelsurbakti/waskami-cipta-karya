@@ -23,6 +23,20 @@ new class extends Component {
     #[Validate('required', as: 'Foto')]
     public $attendance_ci_start_photo;
 
+    public function reset_attendance_check_in()
+    {
+        $this->reset(['option_worker', 'option_contract', 'attendance_ci_worker_id', 'attendance_ci_contract_id', 'attendance_ci_start_photo']);
+        $this->resetValidation();
+        $this->option_worker =  Worker::whereHas('contracts', function ($query) {
+                                    $query->whereHas('type', function ($query) {
+                                        $query->where('name', 'harian');
+                                    })->whereNull('end_date')
+                                    ->whereDoesntHave('attendances', function ($subQuery) {
+                                        $subQuery->whereDate('date', now());
+                                    });
+                                })->get();
+    }
+
     public function hydrate()
     {
         $this->dispatch('re_init_select2');
@@ -46,12 +60,15 @@ new class extends Component {
         $this->validate();
 
         if($this->attendance_ci_start_photo){
-            $unique = uniqid('ACI', true);
-            $extension = $this->attendance_ci_start_photo->getClientOriginalExtension();
-            $filename = $unique .'.'. $extension;
-            $path = date('Y').'/'.date('n').'/'.date('j');
-            FileHelper::ensure_folder_exists("img/attendance/{$path}", 'src');
-            $this->attendance_ci_start_photo->storeAs("img/attendance/{$path}/", $filename, 'src');
+            $path = 'img/attendance/' . date('Y') . '/' . date('n') . '/' . date('j');
+
+            $filename = FileHelper::storeResizedImage(
+                $this->attendance_ci_start_photo,
+                $path,
+                'ACI',
+                1280,
+                'src'
+            );
         } else {
             $filename = null;
         }
@@ -64,9 +81,10 @@ new class extends Component {
         ]);
 
         $this->dispatch('close_modal_attendance_check_in');
+        $this->dispatch('re_render_attendances_container');
 
         LivewireAlert::title('')
-            ->text('Berhasil check ini')
+            ->text('Berhasil check in')
             ->success()
             ->toast()
             ->position('bottom-end')
@@ -97,11 +115,12 @@ new class extends Component {
         @endif
 
         <div class="button-wrapper">
+            <div wire:loading wire:target="attendance_ci_start_photo">Memeriksa File</div>
             <div wire:loading.remove wire:target="attendance_ci_start_photo">
-                <label for="upload" class="btn btn-sm btn-primary me-2 mb-4" tabindex="0">
+                <label for="attendance_ci_start_photo" class="btn btn-sm btn-primary me-2 mb-4" tabindex="0">
                     <span class="d-none d-sm-block">Upload foto baru</span>
                     <i class="bx bx-camera d-block d-sm-none"></i>
-                    <input type="file" id="upload" wire:model="attendance_ci_start_photo" class="account-file-input" name="photo" hidden accept="image/*" capture="user" />
+                    <input type="file" id="attendance_ci_start_photo" wire:model="attendance_ci_start_photo" name="attendance_ci_start_photo" hidden accept="image/*" capture="user" />
                 </label>
             </div>
 
@@ -164,11 +183,13 @@ new class extends Component {
                 $wire.set_attendance_check_in_field($(this).attr('id'), $(this).val());
             });
 
+            $(document).on('click', '#btn_attendance_check_in', function () {
+                $wire.reset_attendance_check_in();
+            });
+
             window.Livewire.on('re_init_select2', () => {
                 setTimeout(initSelect2, 0)
             })
-
-
         });
     </script>
 @endscript

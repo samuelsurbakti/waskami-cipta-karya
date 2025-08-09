@@ -35,4 +35,9 @@ class Contract extends Model
     {
         return $this->belongsTo(Type::class, 'type_id');
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'contract_id');
+    }
 }

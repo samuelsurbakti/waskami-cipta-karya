@@ -20,6 +20,7 @@ return new class extends Migration
             $table->time('end_time')->nullable();
             $table->string('end_photo')->nullable();
             $table->decimal('overtime_rates', 15, 2)->nullable();
+            $table->decimal('docking_pay', 15, 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

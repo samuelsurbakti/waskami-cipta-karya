@@ -13,7 +13,10 @@ class Attendance extends Model
     use HasUuids, LogsActivity, SoftDeletes;
 
     protected $table = 'hr_attendances';
-    protected $fillable = ['contract_id', 'date', 'start_time', 'start_photo', 'end_time', 'end_photo', 'overtime_rates'];
+    protected $fillable = ['contract_id', 'date', 'start_time', 'start_photo', 'end_time', 'end_photo', 'overtime_rates', 'docking_pay'];
+    protected $casts = [
+        'date' => 'date',
+    ];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -23,5 +26,10 @@ class Attendance extends Model
             ->useLogName('Presensi')
             ->setDescriptionForEvent(fn(string $eventName) => ($eventName == 'created' ? 'Menambah' : ($eventName == 'updated' ? 'Mengubah' : 'Menghapus')))
             ->dontLogIfAttributesChangedOnly(['created_at', 'updated_at', 'deleted_at']);
+    }
+
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class, 'contract_id');
     }
 }

@@ -30,5 +30,11 @@ class DatabaseSeeder extends Seeder
         $this->call(SlpModelHasPermissionsTableSeeder::class);
         $this->call(SlpModelHasRolesTableSeeder::class);
         $this->call(SlpRoleHasPermissionsTableSeeder::class);
+        $this->call(HrContractsTableSeeder::class);
+        $this->call(HrContractTypesTableSeeder::class);
+        $this->call(HrTeamsTableSeeder::class);
+        $this->call(HrTeamMembersTableSeeder::class);
+        $this->call(HrPayrollsTableSeeder::class);
+        $this->call(HrAttendancesTableSeeder::class);
     }
 }
