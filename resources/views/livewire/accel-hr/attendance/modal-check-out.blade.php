@@ -24,6 +24,9 @@ new class extends Component {
 
     public function set_attendance_check_out($attendance_co_id)
     {
+        $this->reset(['attendance_co_id', 'attendance_co', 'attendance_co_end_photo', 'attendance_co_overtime_rates', 'attendance_co_docking_pay']);
+        $this->resetValidation();
+
         $this->attendance_co_id = $attendance_co_id;
 
         $this->attendance_co = Attendance::findOrFail($this->attendance_co_id);

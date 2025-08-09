@@ -4,7 +4,7 @@ use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
 
 Route::domain('build.waskamirealty.online')->group(function () {
-    Route::group(['middleware' => ['auth']], function ()
+    Route::group(['middleware' => ['auth', 'log_page_view']], function ()
     {
         Route::get('/', function () {
             return redirect(route('AccelBuild | Home'));
