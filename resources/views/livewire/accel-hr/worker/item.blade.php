@@ -49,10 +49,10 @@ new class extends Component {
                     </li>
                 @endif
 
-                @if ($worker->phone)
+                @if ($worker->whatsapp)
                     <li class="d-flex mb-4">
                         <span class="fw-medium mx-2">No. Whatsapp:</span>
-                        <span class="text-start"><a href="https://wa.me/{{ Str::startsWith($worker->phone, '0') ? '62' . substr($worker->phone, 1) : $worker->phone }}" target="_blank">{{ $worker->whatsapp }}</a></span>
+                        <span class="text-start"><a href="https://wa.me/{{ Str::startsWith($worker->whatsapp, '0') ? '62' . substr($worker->phone, 1) : $worker->phone }}" target="_blank">{{ $worker->whatsapp }}</a></span>
                     </li>
                 @endif
 
