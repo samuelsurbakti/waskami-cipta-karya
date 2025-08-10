@@ -47,7 +47,7 @@ class PageHelper
                 return Menu::where('app_id', $app->id)
                     ->where(function ($q) use ($menuKey) {
                         $q->where('title', $menuKey) // kalau kebetulan sudah sama
-                          ->orWhere('url', Str::lower($menuKey)); // atau cocok dengan url
+                          ->orWhere('url', Str::lower(Str::replace(' ', '-', $menuKey))); // atau cocok dengan url
                     })
                     ->first();
             });

@@ -5,6 +5,7 @@ use Livewire\Volt\Volt;
 
 require __DIR__.'/accel-hr.php';
 require __DIR__.'/accel-build.php';
+require __DIR__.'/accel-ref.php';
 require __DIR__.'/accel.php';
 
 Route::get('/', function () {
