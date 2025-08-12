@@ -1,44 +1,33 @@
 <?php
 
-namespace App\Models\Build;
+namespace App\Models\Build\Project;
 
-use App\Models\Build\Project\Item;
-use App\Models\Ref\Village;
+use App\Models\Build\Project;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Project extends Model
+class Item extends Model
 {
     use HasUuids, LogsActivity, SoftDeletes;
 
-    protected $table = 'build_projects';
-    protected $fillable = ['name', 'type', 'cover', 'village_id', 'address', 'client_id', 'start_date', 'end_date', 'description'];
+    protected $table = 'build_project_items';
+    protected $fillable = ['project_id', 'type', 'name', 'status', 'client_id', 'land_asset_id', 'building_area', 'land_area', 'number_of_floor', 'front_view_photo'];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logFillable()
             ->logOnlyDirty()
-            ->useLogName('Proyek')
+            ->useLogName('Komponen Proyek')
             ->setDescriptionForEvent(fn(string $eventName) => ($eventName == 'created' ? 'Menambah' : ($eventName == 'updated' ? 'Mengubah' : 'Menghapus')))
             ->dontLogIfAttributesChangedOnly(['created_at', 'updated_at', 'deleted_at']);
     }
 
-    public function village()
+    public function project()
     {
-        return $this->belongsTo(Village::class, 'village_id');
-    }
-
-    public function items()
-    {
-        return $this->hasMany(Item::class, 'project_id');
-    }
-
-    public function properties()
-    {
-        return $this->hasMany(Item::class, 'project_id')->where('type', 'property');
+        return $this->belongsTo(Project::class, 'project_id');
     }
 }

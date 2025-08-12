@@ -17,8 +17,12 @@ return new class extends Migration
             $table->enum('type', ['property', 'facility']);
             $table->string('name');
             $table->enum('status', ['planning', 'in_progress', 'completed', 'sold'])->default('planning');
-            $table->uuid('buyer_id')->nullable();
+            $table->uuid('client_id')->nullable();
             $table->uuid('land_asset_id')->nullable();
+            $table->double('building_area')->nullable();
+            $table->double('land_area')->nullable();
+            $table->double('number_of_floor')->nullable();
+            $table->string('front_view_photo')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
