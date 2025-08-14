@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 use App\Models\Hr\Attendance;
@@ -11,6 +12,7 @@ new class extends Component {
     #[On('refresh_attendance_component.{attendance.id}')]
     public function refresh_attendance_component()
     {
+        $this->dispatch('$refresh');
         $this->dispatch('re_init_masonry');
     }
 }; ?>
@@ -54,6 +56,9 @@ new class extends Component {
             </div>
         </div>
 		<div class="card-body">
+            <div class="d-flex justify-content-center">
+                {{ Carbon::parse($attendance->date)->isoFormat('DD MMMM YYYY') }}
+            </div>
             <div class="d-flex justify-content-around">
 				<div class="d-flex flex-column align-items-center gap-2">
                     <h5 class="mb-0 card-title">Check In</h5>
@@ -63,7 +68,7 @@ new class extends Component {
 				<div class="d-flex flex-column align-items-center gap-2 justify-content-between">
                     <h5 class="mb-0 card-title">Check Out</h5>
                     @if ($attendance->end_time)
-                        <img src="{{ asset('/src/img/attendance/'.$attendance->date->year.'/'.$attendance->date->month.'/'.$attendance->date->day.'/'.$attendance->end_photo) }}" alt="Check Out Prove" class="rounded w-px-100 h-px-100">
+                        <img src="/src/img/attendance/{{$attendance->date->year}}/{{$attendance->date->month}}/{{$attendance->date->day}}/{{$attendance->end_photo}}" alt="Check Out Prove" class="rounded w-px-100 h-px-100">
                         <span class="badge bg-label-info">{{ $attendance->end_time }}</span>
                     @else
                         <x-ui::elements.button
@@ -79,7 +84,7 @@ new class extends Component {
                 </div>
 			</div>
 		</div>
-        @if ($attendance->overtime_rates OR $attendance->docking_pay)
+        @if (!is_null($attendance->overtime_rates) OR !is_null($attendance->docking_pay))
             <div class="card-body border-top d-flex justify-content-center gap-2">
                 @if ($attendance->overtime_rates)
                     <span class="badge bg-label-success d-flex align-items-center gap-1"><i class="icon-base bx bx-plus"></i>{{ Number::currency($attendance->overtime_rates, in: 'IDR', locale: 'id', precision: 0) }}</span>

@@ -9113,6 +9113,7 @@ a.invert-bg-dark:focus {
     --bs-icon-size-md: 1.375rem;
     --bs-icon-size-lg: 1.5rem;
     --bs-icon-size-xl: 2rem;
+    --bs-wck-contrast: var(--bs-white);
     --bs-primary-contrast: var(--bs-white);
     --bs-secondary-contrast: var(--bs-white);
     --bs-success-contrast: var(--bs-white);
