@@ -41,5 +41,13 @@ Route::domain('hr.waskamirealty.online')->group(function () {
         Route::group(['middleware' => ['permission:AccelHr - Presensi'], 'prefix' => 'attendance'], function () {
             Volt::route('', 'accel-hr.attendance.index')->name('AccelHr | Attendance');
         });
+
+        Route::group(['middleware' => ['permission:AccelHr - Pinjaman'], 'prefix' => 'loan'], function () {
+            Volt::route('', 'accel-hr.loan.index')->name('AccelHr | Loan');
+        });
+
+        Route::group(['middleware' => ['permission:AccelHr - Gaji'], 'prefix' => 'payroll'], function () {
+            Volt::route('', 'accel-hr.payroll.index')->name('AccelHr | Payroll');
+        });
     });
 });

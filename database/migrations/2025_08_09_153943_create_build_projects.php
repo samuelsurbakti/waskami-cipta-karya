@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('cover');
             $table->uuid('village_id');
             $table->string('address');
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->uuid('client_id')->nullable(); // relasi ke clients
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
