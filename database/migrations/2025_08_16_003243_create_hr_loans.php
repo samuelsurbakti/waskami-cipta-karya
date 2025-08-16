@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('hr_loans', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('loan_number');
             $table->foreignUuid('worker_id');
             $table->foreignUuid('receiver_id');
             $table->date('loan_date');
