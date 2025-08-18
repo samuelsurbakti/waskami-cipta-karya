@@ -94,3 +94,20 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
         <livewire:accel-hr.loan.modal-resource />
     @endcanany
 </div>
+
+@script
+    <script>
+        $(document).ready(function () {
+            function initMasonry() {
+                let grid = document.querySelector('[data-masonry]');
+                if (grid) {
+                    new Masonry(grid, JSON.parse(grid.dataset.masonry || '{}'));
+                }
+            }
+
+            window.Livewire.on('re_init_masonry', () => {
+                setTimeout(initMasonry, 0)
+            })
+        });
+    </script>
+@endscript

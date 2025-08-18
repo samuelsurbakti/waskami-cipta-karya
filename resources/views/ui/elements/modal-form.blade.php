@@ -4,6 +4,7 @@
     'description' => null, // Deskripsi modal
     'loadingTargets' => [], // Array target loading
     'size' => 'lg',        // ukuran modal: sm, md, lg, xl
+    'default_button' => true,
 ])
 
 <div wire:ignore.self class="modal fade" id="{{ $id }}" tabindex="-1" aria-hidden="true">
@@ -37,14 +38,16 @@
                 {{-- Konten/form disediakan oleh slot --}}
                     {{ $slot }}
 
-                    <div class="col-12 text-center mt-8">
-                        <x-ui::elements.button type="submit" class="btn-primary me-sm-3 me-1">
-                            Simpan
-                        </x-ui::elements.button>
-                        <x-ui::elements.button type="reset" class="btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
-                            Batalkan
-                        </x-ui::elements.button>
-                    </div>
+                    @if ($default_button == true)
+                        <div class="col-12 text-center mt-8">
+                            <x-ui::elements.button type="submit" class="btn-primary me-sm-3 me-1">
+                                Simpan
+                            </x-ui::elements.button>
+                            <x-ui::elements.button type="reset" class="btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                                Batalkan
+                            </x-ui::elements.button>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>

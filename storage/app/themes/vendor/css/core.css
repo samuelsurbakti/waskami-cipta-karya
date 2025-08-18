@@ -16924,6 +16924,11 @@ li:not(:first-child) .dropdown-item,
     opacity: .6
 }
 
+.bg-label-wck {
+    background-color: color-mix(in sRGB, var(--bs-paper-bg) var(--bs-bg-label-tint-amount), var(--bs-wck)) !important;
+    color: var(--bs-wck) !important
+}
+
 .bg-label-primary {
     background-color: color-mix(in sRGB, var(--bs-paper-bg) var(--bs-bg-label-tint-amount), var(--bs-wck)) !important;
     color: var(--bs-wck) !important

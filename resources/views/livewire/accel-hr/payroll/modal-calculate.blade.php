@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\Hr\Contract;
 use Livewire\Volt\Component;
 use App\Models\Hr\Attendance;
 use App\Helpers\PayrollCalculatorHelper;
@@ -8,8 +9,11 @@ use App\Helpers\PayrollCalculatorHelper;
 new class extends Component {
     public $options_pay_cycle = [], $options_date_range = [];
 
+    public $payroll_contract_owners = [];
+    public $payroll_active_contracts = [];
+
     public $payroll_pay_cycle;
-    public $payroll_date_range;
+    public $payroll_date_type;
     public $payroll_start_date;
     public $payroll_end_date;
     public $payroll_contracts;
@@ -28,13 +32,17 @@ new class extends Component {
 
     public function calculate_payroll()
     {
-        if($this->payroll_pay_cycle && $this->payroll_date_range == 'automatic') {
-            [$this->payroll_start_date, $this->payroll_end_date] = PayrollCalculatorHelper::generateRange($this->payroll_pay_cycle);
-            // $this->payrolls = PayrollCalculatorHelper::calculate($this->payroll_pay_cycle);
-            $this->payroll_contracts = Attendance::whereBetween('date', [$this->payroll_start_date, $this->payroll_end_date])
-                                        ->distinct('contract_id')
-                                        ->pluck('contract_id');
-        }
+        $this->get_contract_owners();
+    }
+
+    public function get_active_contracts()
+    {
+        $this->payroll_active_contracts = Contract::where('pay_cycle', $this->payroll_pay_cycle)->whereNull('end_date')->get();
+    }
+
+    public function get_contract_owners()
+    {
+        $this->payroll_contract_owners = Contract::where('pay_cycle', $this->payroll_pay_cycle)->whereNull('end_date')->pluck(['relation_type', 'relation_id']);
     }
 
     public function mount()
@@ -50,6 +58,7 @@ new class extends Component {
     :description="'Di sini, Anda dapat menghitung gaji pekerja sebelumnya menyimpannya.'"
     :loading-targets="['set_payroll', 'reset_payroll', 'save']"
     size="xl"
+    :default_button="false"
 >
     @csrf
     <div class="row">
@@ -69,7 +78,7 @@ new class extends Component {
 
         <div class="col-6">
             <x-ui::forms.select
-                wire-model="payroll_date_range"
+                wire-model="payroll_date_type"
                 label="Jenis Periode"
                 placeholder="Pilih Jenis Periode"
                 container-class="col-12 mb-6"
@@ -82,7 +91,7 @@ new class extends Component {
         </div>
     </div>
 
-    @if ($payroll_date_range == 'manual')
+    @if ($payroll_date_type == 'manual')
         <div class="row">
             <div class="col-6">
                 <x-ui::forms.input
@@ -106,7 +115,17 @@ new class extends Component {
         </div>
     @endif
 
-    @if ($payroll_start_date && $payroll_end_date)
+    <div class="row">
+        @foreach ($payroll_contract_owners as $contract_owner)
+            <div class="col-sm-4">
+                <div class="card border">
+                    {{ $contract_owner->relation_id }}
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    {{-- @if ($payroll_start_date && $payroll_end_date)
         @php
             $total = 0;
         @endphp
@@ -181,7 +200,7 @@ new class extends Component {
         </div>
 
         {{ $total }}
-    @endif
+    @endif --}}
 </x-ui::elements.modal-form>
 
 @script
@@ -205,7 +224,7 @@ new class extends Component {
         }
 
         function init_bootstrap_datepicker() {
-            var date = $("#loan_payroll_date").datepicker({
+            var date = $("#payroll_start_date, #payroll_end_date").datepicker({
                 todayHighlight: !0,
                 format: "yyyy-mm-dd",
                 language: 'id',
