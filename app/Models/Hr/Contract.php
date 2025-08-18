@@ -14,7 +14,7 @@ class Contract extends Model
     use HasUuids, LogsActivity, SoftDeletes;
 
     protected $table = 'hr_contracts';
-    protected $fillable = ['title', 'relation_type', 'relation_id', 'project_id', 'type_id', 'rates', 'start_date', 'end_date'];
+    protected $fillable = ['title', 'relation_type', 'relation_id', 'project_id', 'type_id', 'rates', 'pay_cycle', 'start_date', 'end_date'];
 
     public function getActivitylogOptions(): LogOptions
     {

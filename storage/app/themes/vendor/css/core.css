@@ -19613,6 +19613,11 @@ li:not(:first-child) .dropdown-item,
     word-break: break-word !important
 }
 
+.text-wck {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-wck-rgb), var(--bs-text-opacity)) !important
+}
+
 .text-primary {
     --bs-text-opacity: 1;
     color: rgba(var(--bs-wck-rgb), var(--bs-text-opacity)) !important

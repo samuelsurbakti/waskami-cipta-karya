@@ -9,15 +9,12 @@ use App\Helpers\PayrollCalculatorHelper;
 new class extends Component {
     public $options_pay_cycle = [], $options_date_range = [];
 
-    public $payroll_contract_owners = [];
-    public $payroll_active_contracts = [];
-
     public $payroll_pay_cycle;
     public $payroll_date_type;
     public $payroll_start_date;
     public $payroll_end_date;
-    public $payroll_contracts;
-    public $payrolls = [];
+
+    public array $payroll_data = [];
 
     public function hydrate()
     {
@@ -28,21 +25,108 @@ new class extends Component {
     public function set_payroll_field($field, $value)
     {
         $this->$field = $value;
+
+        if($value == 'automatic') {
+            [$payroll_start_date, $payroll_end_date] = PayrollCalculatorHelper::generateRange($this->payroll_pay_cycle);
+            $this->payroll_start_date = Carbon::parse($payroll_start_date)->isoFormat('YYYY-MM-DD');
+            $this->payroll_end_date = Carbon::parse($payroll_end_date)->isoFormat('YYYY-MM-DD');
+        }
     }
 
-    public function calculate_payroll()
+    public function calculate()
     {
-        $this->get_contract_owners();
+        // Kosongkan data sebelumnya
+        $this->payroll_data = [];
+
+        $contracts = Contract::with(['relation', 'relation.loans', 'attendances' => function($query) {
+                $query->whereBetween('date', [$this->payroll_start_date, $this->payroll_end_date]);
+            }])
+            ->where('pay_cycle', $this->payroll_pay_cycle)
+            ->whereNull('end_date')
+            ->get();
+
+        $processedEntities = collect();
+
+        foreach ($contracts as $contract) {
+            $entityId = $contract->relation_id;
+            $entityType = $contract->relation_type;
+            if ($processedEntities->contains($entityType . '-' . $entityId)) {
+                continue;
+            }
+            $processedEntities->push($entityType . '-' . $entityId);
+
+            $attendances = $contract->attendances;
+
+            $totalSalary = $attendances->sum(function ($attendance) use ($contract) {
+                return $contract->rates + $attendance->overtime_rates - $attendance->docking_pay;
+            });
+
+            // Periksa jika tidak ada data kehadiran, jangan tambahkan ke list
+            if($totalSalary == 0) {
+                continue;
+            }
+
+            $loans = $contract->relation->loans->where('status', 'ongoing');
+            $totalLoan = $loans->sum('amount');
+            $netSalary = $totalSalary;
+
+            $attendancesWithRates = $attendances->map(function($attendance) use ($contract) {
+                $attendance->rates = $contract->rates;
+                $attendance->formatted_date = $attendance->date->isoFormat('dddd, DD MMMM YYYY');
+                return $attendance;
+            })->toArray();
+
+            $this->payroll_data[] = [
+                'entity_id' => $entityId,
+                'entity_name' => $contract->relation->name ?? 'N/A',
+                'contract_id' => $contract->id,
+                'total_salary' => $totalSalary,
+                'total_loan' => $totalLoan,
+                'net_salary' => $netSalary,
+                'start_date' => $this->payroll_start_date,
+                'end_date' => $this->payroll_end_date,
+                'attendances' => $attendancesWithRates,
+                // Properti baru untuk pembayaran pinjaman
+                'loan_payment' => null,
+                'pay_off_loan' => false,
+            ];
+        }
     }
 
-    public function get_active_contracts()
+    public function updated($key, $value)
     {
-        $this->payroll_active_contracts = Contract::where('pay_cycle', $this->payroll_pay_cycle)->whereNull('end_date')->get();
-    }
+        if (str_starts_with($key, 'payroll_data.')) {
+            // Memecah string key untuk mendapatkan index dan properti yang diubah
+            $parts = explode('.', $key);
 
-    public function get_contract_owners()
-    {
-        $this->payroll_contract_owners = Contract::where('pay_cycle', $this->payroll_pay_cycle)->whereNull('end_date')->pluck(['relation_type', 'relation_id']);
+            // Memastikan key memiliki format yang benar (contoh: 'payroll_data.0.pay_off_loan')
+            if (count($parts) < 3) {
+                return;
+            }
+
+            $index = $parts[1];
+            $property = $parts[2];
+
+            // Memastikan index yang diberikan ada dalam array payroll_data
+            if (!isset($this->payroll_data[$index])) {
+                return;
+            }
+
+            if ($property === 'pay_off_loan') {
+                // Jika checkbox di-klik, atur loan_payment
+                if ($value) {
+                    $this->payroll_data[$index]['loan_payment'] = $this->payroll_data[$index]['total_loan'] ?? 0;
+                } else {
+                    $this->payroll_data[$index]['loan_payment'] = null;
+                }
+            }
+
+            // Hitung ulang gaji bersih
+            // Menggunakan null coalescing operator untuk mencegah error jika key tidak ada
+            $totalSalary = $this->payroll_data[$index]['total_salary'] ?? 0;
+            $loanPayment = (float) ($this->payroll_data[$index]['loan_payment'] ?? 0);
+            $this->payroll_data[$index]['net_salary'] = $totalSalary - $loanPayment;
+        }
     }
 
     public function mount()
@@ -56,13 +140,13 @@ new class extends Component {
     id="modal_payroll_calculate"
     :title="'Hitung Gaji'"
     :description="'Di sini, Anda dapat menghitung gaji pekerja sebelumnya menyimpannya.'"
-    :loading-targets="['set_payroll', 'reset_payroll', 'save']"
+    :loading-targets="['set_payroll', 'calculate', 'save']"
     size="xl"
     :default_button="false"
 >
     @csrf
     <div class="row">
-        <div class="col-6">
+        <div class="col-sm-12 col-md-6 col-lg-6">
             <x-ui::forms.select
                 wire-model="payroll_pay_cycle"
                 label="Siklus Pembayaran"
@@ -76,7 +160,7 @@ new class extends Component {
             </x-ui::forms.select>
         </div>
 
-        <div class="col-6">
+        <div class="col-sm-12 col-md-6 col-lg-6">
             <x-ui::forms.select
                 wire-model="payroll_date_type"
                 label="Jenis Periode"
@@ -93,7 +177,7 @@ new class extends Component {
 
     @if ($payroll_date_type == 'manual')
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-12 col-md-6 col-lg-6">
                 <x-ui::forms.input
                     wire:model="payroll_start_date"
                     type="text"
@@ -103,7 +187,7 @@ new class extends Component {
                 />
             </div>
 
-            <div class="col-6">
+            <div class="col-sm-12 col-md-6 col-lg-6">
                 <x-ui::forms.input
                     wire:model="payroll_end_date"
                     type="text"
@@ -115,92 +199,86 @@ new class extends Component {
         </div>
     @endif
 
-    <div class="row">
-        @foreach ($payroll_contract_owners as $contract_owner)
-            <div class="col-sm-4">
-                <div class="card border">
-                    {{ $contract_owner->relation_id }}
-                </div>
-            </div>
-        @endforeach
-    </div>
+    @if (!empty($payroll_data))
+        <div class="row g-6">
+            @foreach ($payroll_data as $index => $data)
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border-1">
+                        <div class="card-header pb-2">
+                            <div class="d-flex align-items-start">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2">
+                                        <h5 class="mb-0">
+                                            {{ $data['entity_name'] }}
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-2">Data Kehadiran</h6>
 
-    {{-- @if ($payroll_start_date && $payroll_end_date)
-        @php
-            $total = 0;
-        @endphp
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>/</th>
-                        @for ($date = $payroll_start_date->copy(); $date->lte($payroll_end_date->copy()); $date->addDay())
-                            <th>{{ Carbon::parse($date)->isoFormat('DD MMMM YYYY') }}</th>
-                        @endfor
-                        <th>Pinjaman</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($payroll_contracts as $payroll_contract)
-                        <tr>
-                            @php
-                                $contract = PayrollCalculatorHelper::get_contract($payroll_contract);
-                                $subtotal = 0;
-                            @endphp
-                            <th>{{ $contract->relation->name }}</th>
-                            @for ($date = $payroll_start_date->copy(); $date->lte($payroll_end_date->copy()); $date->addDay())
-                                @php
-                                    $attendance = PayrollCalculatorHelper::get_attendance_amount_by_contract_date($payroll_contract, Carbon::parse($date)->isoFormat('YYYY-MM-DD'));
-                                @endphp
-
-                                <td>
-                                    @if ($attendance)
-                                        @php
-                                            $subtotal += $attendance->contract->rates;
-                                        @endphp
-                                        <span class="badge bg-label-info d-flex align-items-center gap-1 mb-1"><i class="icon-base bx bx-money"></i>{{ $attendance->contract->rates }}</span><br>
-
-                                        @if($attendance->overtime_rates)
-                                            @php
-                                                $subtotal += $attendance->overtime_rates;
-                                            @endphp
-                                            <span class="badge bg-label-success d-flex align-items-center gap-1 mb-1">+ {{ $attendance->overtime_rates }}</span><br>
-                                        @endif
-
-                                        @if ($attendance->docking_pay)
-                                            @php
-                                                $subtotal -= $attendance->docking_pay;
-                                            @endphp
-                                            <span class="badge bg-label-danger d-flex align-items-center gap-1">- {{ $attendance->docking_pay }}</span>
-                                        @endif
-                                    @endif
-                                </td>
-                            @endfor
-                            <td>
-                                @php
-                                    $loan = PayrollCalculatorHelper::get_loan($contract->relation_id);
-                                @endphp
-
-                                @if ($loan)
-                                    @php
-                                        $subtotal -= $loan->amount;
-                                        $total += $subtotal;
-                                    @endphp
-                                    <span class="badge bg-label-warning d-flex align-items-center gap-1 mb-1"><i class="icon-base bx bx-money"></i>{{ $loan->amount }}</span><br>
+                            <ul class="p-0 m-0">
+                                @foreach ($data['attendances'] as $attendance)
+                                    <li class="d-flex mb-2 flex-column border-bottom pb-2">
+                                        <h6 class="mb-2">{{ $attendance['formatted_date'] }}</h6>
+                                        <div class="d-flex justify-content-between flex-column flex-md-row">
+                                            <div class="me-2">
+                                                <small class="d-block fw-medium text-info">{{ Number::currency($attendance['rates'] ?? 0, in: 'IDR', locale: 'id', precision: 0) }}</small>
+                                            </div>
+                                            <div class="me-2">
+                                                <small class="d-block fw-medium text-success">{{ Number::currency($attendance['overtime_rates'] ?? 0, in: 'IDR', locale: 'id', precision: 0) }}</small>
+                                            </div>
+                                            <div class="me-2">
+                                                <small class="d-block fw-medium text-warning">{{ Number::currency($attendance['docking_pay'] ?? 0, in: 'IDR', locale: 'id', precision: 0) }}</small>
+                                            </div>
+                                            <div class="me-2">
+                                                <small class="d-block fw-medium text-wck">{{ Number::currency($attendance['rates'] + $attendance['overtime_rates'] - $attendance['docking_pay'], in: 'IDR', locale: 'id', precision: 0) }}</small>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                                <li class="d-flex flex-column">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="me-2">
+                                            <h6 class="text-wck fw-bold">Total</h6>
+                                        </div>
+                                        <div class="me-2">
+                                            <small class="d-block fw-medium text-wck">{{ Number::currency($data['total_salary'], in: 'IDR', locale: 'id', precision: 0) }}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        @if ($data['total_loan'] != 0)
+                            <div class="card-body border-top">
+                                <h6 class="mb-2">Pembayaran Pinjaman</h6>
+                                <p class="mb-2">Sisa Pinjaman: <span class="text-danger">{{ Number::currency($data['total_loan'], in: 'IDR', locale: 'id', precision: 0) }}</span></p>
+                                @if (!$payroll_data[$index]['pay_off_loan'])
+                                    <x-ui::forms.input-group
+                                        wire:model.live.debounce.500ms="payroll_data.{{ $index }}.loan_payment"
+                                        type="text"
+                                        label="Nominal"
+                                        placeholder="100000"
+                                        container_class="col-12 mb-6"
+                                        front="Rp."
+                                    />
                                 @endif
-                            </td>
-                            <td>
-                                <span class="badge bg-label-wck d-flex align-items-center gap-1 mb-1"><i class="icon-base bx bx-money"></i>{{ $subtotal }}</span><br>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" wire:model.live="payroll_data.{{ $index }}.pay_off_loan" id="pay-off-{{ $index }}" />
+                                    <label class="form-check-label" for="pay-off-{{ $index }}">Lunasi</label>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="card-footer d-flex pt-4 justify-content-between border-top">
+                            <h6 class="mb-0 text-wck fw-bold">Gaji Bersih</h6>
+                            <h6 class="mb-0 text-wck fw-bold">{{ Number::currency($data['net_salary'], in: 'IDR', locale: 'id', precision: 0) }}</h6>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
         </div>
-
-        {{ $total }}
-    @endif --}}
+    @endif
 </x-ui::elements.modal-form>
 
 @script
@@ -237,21 +315,9 @@ new class extends Component {
             initSelect2();
             init_bootstrap_datepicker();
 
-            $(document).on('change', '.select2_payroll, #loan_payroll_date', function () {
+            $(document).on('change', '.select2_payroll, #payroll_start_date, #payroll_end_date', function () {
                 $wire.set_payroll_field($(this).attr('id'), $(this).val());
-                $wire.calculate_payroll();
-            });
-
-            $(document).on('click', '#btn_payroll_add', function () {
-                $wire.reset_payroll();
-            });
-
-            $(document).on('click', '.btn_payroll_edit', function () {
-                $wire.set_payroll($(this).attr('value'));
-            });
-
-            $(document).on('click', '.btn_payroll_delete', function () {
-                $wire.ask_to_delete_payroll($(this).attr('value'));
+                $wire.calculate();
             });
 
             window.Livewire.on('re_init_select2', () => {
