@@ -9,7 +9,7 @@ require __DIR__.'/accel-ref.php';
 require __DIR__.'/accel.php';
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('under-maintenance');
 })->name('home-1');
 
 require __DIR__.'/themes.php';

@@ -3,7 +3,7 @@
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
 
-Route::domain('task.waskamirealty.online')->group(function () {
+Route::domain('task.waskamirealty.com')->group(function () {
     Route::group(['middleware' => ['auth']], function ()
     {
         Route::get('/', function () {
