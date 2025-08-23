@@ -2,6 +2,7 @@
 
 namespace App\Models\Hr;
 
+use App\Models\Hr\Loan\Repayment;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -33,5 +34,20 @@ class Loan extends Model
     public function receiver()
     {
         return $this->belongsTo(Worker::class, 'receiver_id');
+    }
+
+    public function repayments()
+    {
+        return $this->hasMany(Repayment::class, 'loan_id');
+    }
+
+    public function getTotalRepaymentsAttribute()
+    {
+        return $this->repayments()->sum('amount');
+    }
+
+    public function getRemainingRepaymentsAttribute()
+    {
+        return $this->amount - $this->total_repayments;
     }
 }

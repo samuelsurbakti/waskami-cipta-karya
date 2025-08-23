@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hr_loan_repayments', function (Blueprint $table) {
+        Schema::create('hr_payroll_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('loan_id');
-            $table->foreignUuid('worker_id');
-            $table->date('paid_at')->nullable();
+            $table->foreignUuid('payroll_id');
+            $table->enum('type', ['addition', 'subtraction']);
+            $table->string('relation_type');
+            $table->uuid('relation_id');
             $table->decimal('amount', 15, 2);
             $table->timestamps();
             $table->softDeletes();
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hr_loan_repayments');
+        Schema::dropIfExists('hr_payroll_items');
     }
 };

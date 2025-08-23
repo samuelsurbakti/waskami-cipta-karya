@@ -1,10 +1,16 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\Hr\Loan;
+use App\Models\Hr\Worker;
+use App\Models\Hr\Payroll;
 use App\Models\Hr\Contract;
 use Livewire\Volt\Component;
 use App\Models\Hr\Attendance;
+use App\Models\Hr\Payroll\Item;
+use App\Models\Hr\Loan\Repayment;
 use App\Helpers\PayrollCalculatorHelper;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 new class extends Component {
     public $options_pay_cycle = [], $options_date_range = [];
@@ -67,7 +73,7 @@ new class extends Component {
             }
 
             $loans = $contract->relation->loans->where('status', 'ongoing');
-            $totalLoan = $loans->sum('amount');
+            $totalLoan = $loans->sum('remaining_repayments');
             $netSalary = $totalSalary;
 
             $attendancesWithRates = $attendances->map(function($attendance) use ($contract) {
@@ -127,6 +133,70 @@ new class extends Component {
             $loanPayment = (float) ($this->payroll_data[$index]['loan_payment'] ?? 0);
             $this->payroll_data[$index]['net_salary'] = $totalSalary - $loanPayment;
         }
+    }
+
+    public function save()
+    {
+        // $this->validate();
+
+        foreach ($this->payroll_data as $data) {
+            $payroll = Payroll::updateOrCreate(
+                [
+                    'contract_id' => $data['contract_id'],
+                    'start_date' => $data['start_date'],
+                    'end_date' => $data['end_date']
+                ],
+                [
+                    'status' => 'draft'
+                ]
+            );
+
+            foreach ($data['attendances'] as $attendance) {
+                Item::updateOrCreate(
+                    ['payroll_id' => $payroll->id, 'type' => 'addition', 'relation_type' => Attendance::class, 'relation_id' => $attendance['id']],
+                    ['amount' => $attendance['rates'] + $attendance['overtime_rates'] - $attendance['docking_pay']]
+                );
+            }
+
+            if($data['loan_payment']) {
+                $contract = Contract::find($data['contract_id']);
+                $worker = Worker::find($contract->relation_id);
+                $loans = Loan::where('worker_id', $worker->id)->where('status', 'ongoing')->orderBy('loan_date', 'asc')->get();
+                $remainingPayment = $data['loan_payment'];
+
+                foreach ($loans as $loan) {
+                    if ($remainingPayment <= 0) {
+                        break;
+                    }
+
+                    $paymentAmount = min($loan->remaining_repayments, $remainingPayment);
+
+                    $repayment = Repayment::create([
+                        'loan_id' => $loan->id,
+                        'worker_id' => $worker->id,
+                        'amount' => $paymentAmount,
+                    ]);
+
+                    Item::updateOrCreate(
+                        ['payroll_id' => $payroll->id, 'type' => 'subtraction', 'relation_type' => Repayment::class, 'relation_id' => $repayment->id],
+                        ['amount' => $paymentAmount]
+                    );
+
+                    $remainingPayment -= $paymentAmount;
+                }
+            }
+        }
+
+        $this->dispatch('close_modal_payroll_calculate');
+
+        LivewireAlert::title('')
+            ->text('Berhasil membuat draft gaji')
+            ->success()
+            ->toast()
+            ->position('bottom-end')
+            ->show();
+
+        // $this->reset_loan();
     }
 
     public function mount()
@@ -279,6 +349,15 @@ new class extends Component {
             @endforeach
         </div>
     @endif
+
+    <div class="col-12 text-center mt-8">
+        <x-ui::elements.button type="submit" class="btn-success me-sm-3 me-1">
+            Buat Draft
+        </x-ui::elements.button>
+        <x-ui::elements.button type="reset" class="btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+            Batalkan
+        </x-ui::elements.button>
+    </div>
 </x-ui::elements.modal-form>
 
 @script

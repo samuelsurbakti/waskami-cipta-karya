@@ -1,45 +1,38 @@
 <?php
 
-namespace App\Models\Hr\Loan;
+namespace App\Models\Hr\Payroll;
 
-use App\Models\Hr\Loan;
-use App\Models\Hr\Payroll\Item;
-use App\Models\Hr\Worker;
+use App\Models\Hr\Payroll;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Repayment extends Model
+class Item extends Model
 {
     use HasUuids, LogsActivity, SoftDeletes;
 
-    protected $table = 'hr_loan_repayments';
-    protected $fillable = ['loan_id', 'worker_id', 'paid_at', 'amount'];
+    protected $table = 'hr_payroll_items';
+    protected $fillable = ['payroll_id', 'type', 'relation_type', 'relation_id', 'amount'];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logFillable()
             ->logOnlyDirty()
-            ->useLogName('Pembayaran Pinjaman')
+            ->useLogName('Item Gaji')
             ->setDescriptionForEvent(fn(string $eventName) => ($eventName == 'created' ? 'Menambah' : ($eventName == 'updated' ? 'Mengubah' : 'Menghapus')))
             ->dontLogIfAttributesChangedOnly(['created_at', 'updated_at', 'deleted_at']);
     }
 
-    public function loan()
+    public function payroll()
     {
-        return $this->belongsTo(Loan::class, 'loan_id');
+        return $this->belongsTo(Payroll::class, 'payroll_id');
     }
 
-    public function worker()
+    public function relation()
     {
-        return $this->belongsTo(Worker::class, 'worker_id');
-    }
-
-    public function payroll_items()
-    {
-        return $this->morphMany(Item::class, 'relation');
+        return $this->morphTo();
     }
 }

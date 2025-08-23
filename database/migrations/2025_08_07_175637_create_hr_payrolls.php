@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignUuid('contract_id')->constrained('hr_contracts')->cascadeOnDelete();
             $table->date('start_date');
             $table->date('end_date');
-            $table->decimal('total_salary', 15, 2);
             $table->enum('status', ['draft', 'final'])->default('draft');
             $table->timestamps();
             $table->softDeletes();

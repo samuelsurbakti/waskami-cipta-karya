@@ -2,6 +2,7 @@
 
 namespace App\Models\Hr;
 
+use App\Models\Hr\Payroll\Item;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -31,5 +32,10 @@ class Attendance extends Model
     public function contract()
     {
         return $this->belongsTo(Contract::class, 'contract_id');
+    }
+
+    public function payroll_items()
+    {
+        return $this->morphMany(Item::class, 'relation');
     }
 }
