@@ -30,28 +30,20 @@ new class extends Component {
                     </div>
                 </div>
                 <div class="ms-auto">
-                    <div class="dropdown z-2">
-                        <button type="button" class="btn btn-icon btn-text-secondary rounded-pill dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="icon-base bx bx-dots-vertical-rounded icon-md text-body-secondary"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="javascript:void(0);">Rename project</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="javascript:void(0);">View details</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="javascript:void(0);">Add to favorites</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="javascript:void(0);">Leave Project</a>
-                            </li>
-                        </ul>
-                    </div>
+                    @canany(['AccelHr - Presensi - Mengubah Data', 'AccelHr - Presensi - Menghapus Data'])
+                        <x-ui::elements.dropdown-actions
+                            edit-target="modal_attendance_resource"
+                            :delete-action="$attendance->id"
+                            :permissions="[
+                                'view' => 'AccelHr - Presensi - Melihat Data',
+                                'edit' => 'AccelHr - Presensi - Mengubah Data',
+                                'delete' => 'AccelHr - Presensi - Menghapus Data'
+                            ]"
+                            edit-class="btn_attendance_edit"
+                            delete-class="btn_attendance_delete"
+                            variant="action"
+                        />
+                    @endcanany
                 </div>
             </div>
         </div>

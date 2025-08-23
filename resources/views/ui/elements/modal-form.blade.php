@@ -34,7 +34,7 @@
                     @endif
                 </div>
 
-                <form wire:submit="save" method="POST">
+                <form wire:submit="save" method="POST" novalidate>
                 {{-- Konten/form disediakan oleh slot --}}
                     {{ $slot }}
 

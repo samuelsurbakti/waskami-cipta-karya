@@ -180,6 +180,10 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
         <livewire:accel-hr.attendance.modal-check-out />
     @endcan
 
+    @canany(['AccelHr - Presensi - Menambah Data', 'AccelHr - Presensi - Mengubah Data', 'AccelHr - Presensi - Menghapus Data'])
+        <livewire:accel-hr.attendance.modal-resource />
+    @endcanany
+
     @can('AccelHr - Presensi - Mengubah Data')
         <livewire:accel-hr.attendance.modal-batch-update-net-pay />
     @endcan
