@@ -157,6 +157,8 @@ new #[Layout('ui.layouts.vertical')] class extends Component {
 
             @can('AccelHr - Presensi - Melihat Daftar Data')
                 <livewire:accel-hr.attendance.filter />
+
+                <livewire:accel-hr.attendance.print />
             @endcan
         </div>
 
